@@ -14,7 +14,7 @@ class LoginView extends StatelessWidget {
       create: (context) => AuthRepository(),
       child: BlocProvider(
         create: (context) => GoogleLoginBloc(
-          authRepository: context.read<AuthRepository>(),
+          authRepository: RepositoryProvider.of<AuthRepository>(context),
         ),
         child: Scaffold(
           body: Column(
@@ -76,9 +76,30 @@ class LoginView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    Image(
-                      image: AssetImage('lib/assets/google_sign_in.png'),
-                      height: 50,
+                    BlocBuilder<GoogleLoginBloc, GoogleLoginState>(
+                      builder: (context, state) {
+                        return ElevatedButton(
+                          onPressed: () {
+                            context.read<GoogleLoginBloc>().add(
+                              GoogleLoginRequested(),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF367D65),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 50,
+                              vertical: 15,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Image(
+                            image: AssetImage('lib/assets/google_sign_in.png'),
+                            height: 50,
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

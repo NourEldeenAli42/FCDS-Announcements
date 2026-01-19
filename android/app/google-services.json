@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "921251262968-bhfqt1u2nam22iulqg5adck7p2dbm0d2.apps.googleusercontent.com",
+          "client_id": "921251262968-0fs6mdptsfgfudqo73mleq7qa7pma682.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.TeamMaterials.fcds_announcements",
+            "certificate_hash": "ca23b85b5df7f2aa43b805362d952cfc3c72525a"
+          }
+        },
+        {
+          "client_id": "921251262968-of783c602bmg7go184s7mpv0dmlnhinl.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

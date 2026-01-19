@@ -10,7 +10,7 @@ class GoogleLoginBloc extends Bloc<GoogleLoginEvent, GoogleLoginState> {
   GoogleLoginBloc({required this.authRepository}) : super(GoogleLoginInitial()) {
     on<GoogleLoginEvent>((event, emit) {
       if(event is GoogleLoginRequested) {
-        // Handle Google login logic here
+        authRepository.signInWithGoogle();
         emit(GoogleLoginInProgress());
         // Simulate a successful login
         emit(GoogleLoginSuccess());
