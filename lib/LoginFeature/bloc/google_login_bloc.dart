@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fcds_announcements/LoginFeature/repositories/auth_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'google_login_event.dart';
 part 'google_login_state.dart';

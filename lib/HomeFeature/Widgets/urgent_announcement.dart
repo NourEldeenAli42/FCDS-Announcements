@@ -2,11 +2,11 @@ import 'package:fcds_announcements/utils/text_style.dart';
 import 'package:flutter/material.dart';
 
 class UrgentAnnouncement extends StatelessWidget {
-  String chipText;
-  String titleText;
-  String bodyText;
-  String timeText;
-  UrgentAnnouncement({
+  final String chipText;
+  final String titleText;
+  final String bodyText;
+  final String timeText;
+  const UrgentAnnouncement({
     super.key,
     required this.chipText,
     required this.titleText,
