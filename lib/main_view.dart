@@ -1,5 +1,6 @@
 import 'package:crystal_navigation_bar/crystal_navigation_bar.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
+import 'package:fcds_announcements/SubjectsFeature/subjects_view.dart';
 import 'package:fcds_announcements/assets/assets_links.dart';
 import 'package:fcds_announcements/utils/text_style.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,13 +14,20 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
-  int _currentIndex = 0;
+  final _pageViewController = PageController(initialPage: 1);
+  @override
+  dispose() {
+    _pageViewController.dispose();
+    super.dispose();
+  }
+
+  int _currentIndex = 1;
   Widget getCurrentPage(int index) {
     switch (index) {
       case 0:
         return HomeView();
       case 1:
-        return Center(child: Text('School'));
+        return SubjectsView();
       case 2:
         return Center(child: Text('Favorites'));
       case 3:
@@ -41,7 +49,17 @@ class _MainViewState extends State<MainView> {
           currentIndex: _currentIndex,
           onTap: (index) {
             setState(() {
-              _currentIndex = index;
+              if (index != _currentIndex) {
+                if ((index - _currentIndex).abs() == 1) {
+                  _pageViewController.animateToPage(
+                    index,
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                } else {
+                  _pageViewController.jumpToPage(index);
+                }
+              }
             });
           },
           unselectedItemColor: Colors.white70,
@@ -118,7 +136,15 @@ class _MainViewState extends State<MainView> {
           ),
         ],
       ),
-      body: getCurrentPage(_currentIndex),
+      body: PageView(
+        controller: _pageViewController,
+        onPageChanged: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        children: List.generate(5, (index) => getCurrentPage(index)),
+      ),
     );
   }
 }

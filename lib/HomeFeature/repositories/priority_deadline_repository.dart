@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcds_announcements/HomeFeature/Models/priority_deadline_data_model.dart';
 
