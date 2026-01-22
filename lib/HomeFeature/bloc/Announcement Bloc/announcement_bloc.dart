@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:fcds_announcements/HomeFeature/Models/urgent_announcement_data_model.dart';
-import 'package:fcds_announcements/HomeFeature/repositories/urgent_update_reposittory.dart';
+import 'package:fcds_announcements/HomeFeature/repositories/urgent_update_repository.dart';
 import 'package:fcds_announcements/utils/repositories/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -49,7 +49,7 @@ class PriorityDeadlineCard extends StatelessWidget {
               child: Icon(
                 Icons.warning_amber_rounded,
                 size: 100,
-                color: const Color(0xFFD38670).withOpacity(0.1),
+                color: const Color(0xFFD38670).withValues(alpha: 0.1),
               ),
             ),
 

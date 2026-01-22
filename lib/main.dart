@@ -1,6 +1,8 @@
 import 'package:fcds_announcements/LoginFeature/login_view.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
+import 'package:fcds_announcements/main_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -8,6 +10,7 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseDatabase.instance.setPersistenceEnabled(true);
   runApp(const MyApp());
 }
 
@@ -18,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {'/home': (context) => const HomeView()},
+      routes: {'/home': (context) => HomeView()},
       title: 'Flutter Demo',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
       home: const AuthWrapper(),
@@ -44,7 +47,7 @@ class AuthWrapper extends StatelessWidget {
 
         // 2. If the snapshot has user data, they are logged in
         if (snapshot.hasData) {
-          return const HomeView();
+          return MainView();
         }
 
         // 3. Otherwise, show the login screen
