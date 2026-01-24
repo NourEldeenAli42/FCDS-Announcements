@@ -15,7 +15,8 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => PriorityDeadlineBloc()..add(LoadPriorityDeadlineEvent()),
+      create: (context) =>
+          PriorityDeadlineBloc()..add(LoadPriorityDeadlineEvent()),
       child: BlocProvider(
         create: (context) => AnnouncementBloc()..add(LoadAnnouncementEvent()),
         child: RepositoryProvider(
@@ -40,20 +41,25 @@ class HomeView extends StatelessWidget {
                       BlocBuilder<AnnouncementBloc, AnnouncementState>(
                         builder: (context, state) {
                           if (state is AnnouncementLoading) {
-                            return Shimmer.fromColors(
-                              baseColor: Colors.grey.shade300,
-                              highlightColor: Colors.grey.shade100,
-                              child: Card(
-                                margin: EdgeInsets.symmetric(horizontal: 16.0),
-                                child: Container(
-                                  margin: .only(bottom: 16),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    color: Colors.white,
+                            return Container(
+                              margin: .only(bottom: 16, top: 16),
+                              child: Shimmer.fromColors(
+                                baseColor: Colors.grey.shade300,
+                                highlightColor: Colors.grey.shade100,
+                                child: Card(
+                                  margin: EdgeInsets.symmetric(
+                                    horizontal: 16.0,
                                   ),
-                                  padding: .all(16),
-                                  width: double.infinity,
-                                  height: 100,
+                                  child: Container(
+                                    margin: .only(bottom: 16),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      color: Colors.white,
+                                    ),
+                                    padding: .all(16),
+                                    width: double.infinity,
+                                    height: 100,
+                                  ),
                                 ),
                               ),
                             );
@@ -63,10 +69,10 @@ class HomeView extends StatelessWidget {
                               return Container(
                                 margin: .only(bottom: 16),
                                 child: UrgentAnnouncement(
-                                  chipText: 'URGENT UPDATE',
+                                  chipText: announcement.chipText,
                                   titleText: announcement.titleText,
                                   bodyText: announcement.bodyText,
-                                  timeText: '2 hours ago',
+                                  timeText: announcement.timeText,
                                 ),
                               );
                             } else {

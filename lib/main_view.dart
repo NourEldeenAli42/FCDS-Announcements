@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crystal_navigation_bar/crystal_navigation_bar.dart';
+import 'package:fcds_announcements/FollowPageFeature/search_courses.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
 import 'package:fcds_announcements/SubjectsFeature/subjects_view.dart';
-import 'package:fcds_announcements/assets/assets_links.dart';
+import 'package:fcds_announcements/generated/assets.dart';
 import 'package:fcds_announcements/utils/text_style.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,14 +16,14 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
-  final _pageViewController = PageController(initialPage: 1);
+  final _pageViewController = PageController();
   @override
   dispose() {
     _pageViewController.dispose();
     super.dispose();
   }
 
-  int _currentIndex = 1;
+  int _currentIndex = 0;
   Widget getCurrentPage(int index) {
     switch (index) {
       case 0:
@@ -42,7 +44,44 @@ class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
+      floatingActionButton: _currentIndex == 1
+          ? FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  showModalBottomSheet(
+                    showDragHandle: true,
+                    context: context,
+                    builder: (context) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ListTile(
+                            leading: Icon(Icons.book),
+                            title: Text('Find / Follow Pages'),
+                            onTap: () {
+                              showSearch(
+                                context: context,
+                                delegate: SearchCourses(),
+                              );
+                            },
+                          ),
+                          ListTile(
+                            leading: Icon(Icons.event),
+                            title: Text('Add Event'),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                });
+              },
+              backgroundColor: Color.fromARGB(255, 54, 125, 101),
+              child: Icon(Icons.add, color: Colors.white),
+            )
+          : null,
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: CrystalNavigationBar(
@@ -129,8 +168,15 @@ class _MainViewState extends State<MainView> {
           InkWell(
             onTap: () => FirebaseAuth.instance.signOut(),
             child: CircleAvatar(
+              onForegroundImageError: (exception, stackTrace) => CircleAvatar(
+                radius: 25,
+                backgroundImage: AssetImage(Assets.profile),
+                backgroundColor: Colors.blueGrey,
+              ),
               radius: 25,
-              foregroundImage: AssetImage(profilePicture),
+              foregroundImage: CachedNetworkImageProvider(
+                FirebaseAuth.instance.currentUser?.photoURL ?? '',
+              ),
               backgroundColor: Colors.blueGrey,
             ),
           ),

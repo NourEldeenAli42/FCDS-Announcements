@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {'/home': (context) => HomeView()},
-      title: 'Flutter Demo',
+      title: 'FCDS Announcements',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
       home: const AuthWrapper(),
     );

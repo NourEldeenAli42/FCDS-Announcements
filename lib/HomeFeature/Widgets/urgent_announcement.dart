@@ -63,7 +63,7 @@ class UrgentAnnouncement extends StatelessWidget {
               Icon(Icons.access_time, color: Colors.white70, size: 16),
               SizedBox(width: 4),
               Text(
-                'Posted $timeText ago',
+                'Posted $timeText',
                 style: MyTextStyle(color: Colors.white70, fontSize: 14),
               ),
             ],
