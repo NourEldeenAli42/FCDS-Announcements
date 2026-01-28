@@ -78,6 +78,7 @@ class SearchCourses extends SearchDelegate {
               return Center(child: Text('No courses found.'));
             }
             return ListView.builder(
+              key: ValueKey(query),
               itemCount: filteredResults.length,
               itemBuilder: (context, index) {
                 final page = filteredResults[index];
@@ -141,6 +142,7 @@ class SearchCourses extends SearchDelegate {
                 )
                 .toList();
             return ListView.builder(
+              key: ValueKey(query),
               itemCount: filteredResults.length,
               itemBuilder: (context, index) {
                 final page = filteredResults[index];

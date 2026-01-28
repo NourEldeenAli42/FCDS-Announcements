@@ -5,22 +5,61 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
-class CourseExpansionTile extends StatelessWidget {
-  final onTap = VoidCallback;
+class CourseExpansionTile extends StatefulWidget {
   final CourseDataModel page;
   const CourseExpansionTile({super.key, required this.page});
-  //TODO: Fix that when i search, close all expanded tiles
+
+  @override
+  State<CourseExpansionTile> createState() => _CourseExpansionTileState();
+}
+
+class _CourseExpansionTileState extends State<CourseExpansionTile> {
+  late SearchPagesBloc _searchPagesBloc;
+  bool _isExpanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchPagesBloc = SearchPagesBloc();
+  }
+
+  @override
+  void didUpdateWidget(CourseExpansionTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Reset expansion state when the page changes (e.g., when search results change)
+    if (oldWidget.page.id != widget.page.id) {
+      setState(() {
+        _isExpanded = false;
+      });
+      // Reset the bloc to clear previous state
+      _searchPagesBloc.close();
+      _searchPagesBloc = SearchPagesBloc();
+    }
+  }
+
+  @override
+  void dispose() {
+    _searchPagesBloc.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SearchPagesBloc(),
+    return BlocProvider.value(
+      value: _searchPagesBloc,
       child: BlocBuilder<SearchPagesBloc, SearchPagesState>(
         builder: (context, state) {
           return ExpansionTile(
+            initiallyExpanded: _isExpanded,
             shape: Border(),
             onExpansionChanged: (value) {
+              setState(() {
+                _isExpanded = value;
+              });
               if (value) {
-                context.read<SearchPagesBloc>().add(FetchPagesEvent(page.name));
+                context.read<SearchPagesBloc>().add(
+                  FetchPagesEvent(widget.page.name),
+                );
               }
             },
             title: Row(
@@ -36,7 +75,7 @@ class CourseExpansionTile extends StatelessWidget {
                 SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    page.name.trim(),
+                    widget.page.name.trim(),
                     style: MyTextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
