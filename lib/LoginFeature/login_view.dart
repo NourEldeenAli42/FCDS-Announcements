@@ -22,7 +22,7 @@ class LoginView extends StatelessWidget {
             children: [
               const Center(
                 child: Image(
-                  image: AssetImage('lib/assets/hat.png'),
+                  image: AssetImage('assets/hat.png'),
                   height: 50,
                   color: Color.fromARGB(255, 54, 125, 101),
                 ),
@@ -95,7 +95,7 @@ class LoginView extends StatelessWidget {
                             ),
                           ),
                           child: Image(
-                            image: AssetImage('lib/assets/google_sign_in.png'),
+                            image: AssetImage('assets/google_sign_in.png'),
                             height: 50,
                           ),
                         );

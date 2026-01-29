@@ -1,5 +1,5 @@
 import 'package:fcds_announcements/FollowPageFeature/Widgets/course_expansion_tile.dart';
-import 'package:fcds_announcements/FollowPageFeature/bloc/search_pages_bloc.dart';
+import 'package:fcds_announcements/FollowPageFeature/bloc/Pages%20Bloc/pages_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
@@ -30,8 +30,8 @@ class SearchCourses extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     return BlocProvider(
-      create: (context) => SearchPagesBloc()..add(FetchCoursesEvent()),
-      child: BlocBuilder<SearchPagesBloc, SearchPagesState>(
+      create: (context) => PagesBloc()..add(FetchCoursesEvent()),
+      child: BlocBuilder<PagesBloc, PagesState>(
         builder: (context, state) {
           if (state is SearchCoursesLoading) {
             return Center(
@@ -97,8 +97,8 @@ class SearchCourses extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     return BlocProvider(
-      create: (context) => SearchPagesBloc()..add(FetchCoursesEvent()),
-      child: BlocBuilder<SearchPagesBloc, SearchPagesState>(
+      create: (context) => PagesBloc()..add(FetchCoursesEvent()),
+      child: BlocBuilder<PagesBloc, PagesState>(
         builder: (context, state) {
           if (state is SearchCoursesLoading) {
             return Center(

@@ -8,13 +8,9 @@ class UserRepository {
   // Streams the list of page IDs the user follows
   Future<List<String>> getFollowedPageIds() async {
     List<String> followedPageIds = [];
-    final doc = await _db
-        .collection('users')
-        .doc('zjYapRWMOPQcwE61Hymcrnnsy2C2')
-        .collection('following')
-        .get();
-    for (var document in doc.docs) {
-      followedPageIds.add(document.id);
+    final doc = await _db.collection('users').doc(user?.uid).get();
+    for (var document in doc.data()?['following'] ?? []) {
+      followedPageIds.add(document);
     }
     return followedPageIds;
   }

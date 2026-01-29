@@ -2,11 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crystal_navigation_bar/crystal_navigation_bar.dart';
 import 'package:fcds_announcements/FollowPageFeature/search_courses.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
+import 'package:fcds_announcements/SubjectsFeature/Widgets/add_reminder_form.dart';
 import 'package:fcds_announcements/SubjectsFeature/subjects_view.dart';
+import 'package:fcds_announcements/SubjectsFeature/bloc/Subjects%20Bloc/subjects_bloc.dart';
 import 'package:fcds_announcements/generated/assets.dart';
 import 'package:fcds_announcements/utils/text_style.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MainView extends StatefulWidget {
   const MainView({super.key});
@@ -29,7 +32,10 @@ class _MainViewState extends State<MainView> {
       case 0:
         return HomeView();
       case 1:
-        return SubjectsView();
+        return BlocProvider(
+          create: (context) => SubjectsBloc()..add(const LoadSubjectsEvent()),
+          child: SubjectsView(),
+        );
       case 2:
         return Center(child: Text('Favorites'));
       case 3:
@@ -56,8 +62,14 @@ class _MainViewState extends State<MainView> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ListTile(
-                            leading: Icon(Icons.book),
-                            title: Text('Find / Follow Pages'),
+                            leading: Icon(
+                              Icons.add_circle_outlined,
+                              color: Color.fromARGB(255, 53, 125, 101),
+                            ),
+                            title: Text(
+                              'Find / Follow Pages',
+                              style: MyTextStyle(),
+                            ),
                             onTap: () {
                               showSearch(
                                 context: context,
@@ -66,10 +78,28 @@ class _MainViewState extends State<MainView> {
                             },
                           ),
                           ListTile(
-                            leading: Icon(Icons.event),
-                            title: Text('Add Event'),
-                            onTap: () {
-                              Navigator.pop(context);
+                            leading: Icon(
+                              Icons.add_alert,
+                              color: Color.fromARGB(255, 53, 125, 101),
+                            ),
+                            title: Text('Add Reminder', style: MyTextStyle()),
+                            onTap: () async {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    insetPadding: .all(10),
+                                    title: Text(
+                                      'Schedule Reminder Notification',
+                                      style: MyTextStyle(
+                                        fontWeight: .bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    content: AddReminderForm(),
+                                  );
+                                },
+                              );
                             },
                           ),
                         ],

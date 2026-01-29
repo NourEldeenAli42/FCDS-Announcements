@@ -1,17 +1,17 @@
-part of 'search_pages_bloc.dart';
+part of 'pages_bloc.dart';
 
-sealed class SearchPagesState extends Equatable {
-  const SearchPagesState();
+sealed class PagesState extends Equatable {
+  const PagesState();
 
   @override
   List<Object> get props => [];
 }
 
-final class SearchPagesInitial extends SearchPagesState {}
+final class PagesInitial extends PagesState {}
 
-final class SearchCoursesLoading extends SearchPagesState {}
+final class SearchCoursesLoading extends PagesState {}
 
-final class SearchCoursesLoaded extends SearchPagesState {
+final class SearchCoursesLoaded extends PagesState {
   final List<CourseDataModel> pages;
 
   const SearchCoursesLoaded(this.pages);
@@ -20,7 +20,7 @@ final class SearchCoursesLoaded extends SearchPagesState {
   List<Object> get props => [pages];
 }
 
-final class SearchCoursesError extends SearchPagesState {
+final class SearchCoursesError extends PagesState {
   final String message;
 
   const SearchCoursesError(this.message);
@@ -29,8 +29,9 @@ final class SearchCoursesError extends SearchPagesState {
   List<Object> get props => [message];
 }
 
-final class SearchPagesLoading extends SearchPagesState {}
-final class SearchPagesLoaded extends SearchPagesState {
+final class SearchPagesLoading extends PagesState {}
+
+final class SearchPagesLoaded extends PagesState {
   final List<PageDataModel> pages;
 
   const SearchPagesLoaded(this.pages);
@@ -38,7 +39,8 @@ final class SearchPagesLoaded extends SearchPagesState {
   @override
   List<Object> get props => [pages];
 }
-final class SearchPagesError extends SearchPagesState {
+
+final class SearchPagesError extends PagesState {
   final String message;
 
   const SearchPagesError(this.message);
