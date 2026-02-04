@@ -1,5 +1,6 @@
 import 'package:fcds_announcements/LoginFeature/login_view.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
+import 'package:fcds_announcements/RecentMessagesFeature/messages_view.dart';
 import 'package:fcds_announcements/main_view.dart';
 import 'package:fcds_announcements/RemindersFeature/bloc/reminders_bloc.dart';
 import 'package:fcds_announcements/utils/repositories/firebase_messaging_repository.dart';
@@ -30,7 +31,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {'/home': (context) => HomeView()},
+      routes: {
+        '/home': (context) => HomeView(),
+        '/messages': (context) => MessagesView(),
+      },
       title: 'FCDS Announcements',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.tealAccent),

@@ -1,4 +1,4 @@
-import 'package:fcds_announcements/utils/text_style.dart';
+import 'package:fcds_announcements/utils/Widgets/text_style.dart';
 import 'package:flutter/material.dart';
 
 class FunctionCard extends StatelessWidget {

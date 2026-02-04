@@ -10,7 +10,7 @@ import 'package:fcds_announcements/SubjectsFeature/subjects_view.dart';
 import 'package:fcds_announcements/SubjectsFeature/bloc/Subjects%20Bloc/subjects_bloc.dart';
 import 'package:fcds_announcements/generated/assets.dart';
 import 'package:fcds_announcements/utils/date_formatter.dart';
-import 'package:fcds_announcements/utils/text_style.dart';
+import 'package:fcds_announcements/utils/Widgets/text_style.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -154,7 +154,7 @@ class _MainViewState extends State<MainView> {
           TextSpan(
             children: [
               TextSpan(
-                text: Dateformatter().formatDate(DateTime.now()),
+                text: Dateformatter.formatDate(DateTime.now()),
                 style: MyTextStyle(fontSize: 14, color: Color(0xFF608579)),
               ),
               TextSpan(
@@ -189,7 +189,7 @@ class _MainViewState extends State<MainView> {
                       style: MyTextStyle(fontWeight: FontWeight.bold),
                     ),
                     content: Text(
-                      'Are you sure you want to logout?\n All your reminders will be cleared from this device.',
+                      'Are you sure you want to logout?\nAll your reminders and messages history will be cleared from this device.',
                       style: MyTextStyle(),
                     ),
                     actions: [

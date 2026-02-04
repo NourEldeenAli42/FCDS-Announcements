@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:fcds_announcements/RecentMessagesFeature/repositories/notification_reciever_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -19,7 +22,6 @@ class FirebaseMessagingRepository {
     showBadge: true,
   );
 
-  
   final _firebaseMessaging = FirebaseMessaging.instance;
   Future<void> initNotifications() async {
     final currentTimeZone = await FlutterTimezone.getLocalTimezone();
@@ -42,7 +44,13 @@ class FirebaseMessagingRepository {
         ?.createNotificationChannel(highPriorityChannel);
     await _firebaseMessaging.requestPermission(provisional: true);
     FirebaseMessaging.onMessage.listen(handleNotification);
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  log('saving');
+  await NotificationRepository.saveNotification(message);
 }
 
 Future<void> handleNotification(RemoteMessage message) async {
@@ -69,4 +77,5 @@ Future<void> handleNotification(RemoteMessage message) async {
       ),
     );
   }
+  await NotificationRepository.saveNotification(message);
 }

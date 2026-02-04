@@ -1,5 +1,5 @@
-class Dateformatter {
-  String getWeekdayName(int weekday) {
+final class Dateformatter {
+  static String getWeekdayName(int weekday) {
     switch (weekday) {
       case 1:
         return 'Monday';
@@ -20,7 +20,7 @@ class Dateformatter {
     }
   }
 
-  String getMonthName(int month) {
+  static String getMonthName(int month) {
     switch (month) {
       case 1:
         return 'Jan ';
@@ -51,9 +51,43 @@ class Dateformatter {
     }
   }
 
-  String formatDate(DateTime date) {
+  static String formatDate(DateTime date) {
     String month = getMonthName(date.month);
     String weekday = getWeekdayName(date.weekday);
     return '$weekday, $month ${date.day}\n';
+  }
+
+  static String getTimeAgo(DateTime date) {
+    String timeAgo;
+    final now = DateTime.now();
+    final diff = now.difference(date);
+    if (diff.inSeconds < 60) {
+      timeAgo = 'Just Now';
+    } else if (diff.inMinutes < 60) {
+      if (diff.inMinutes == 1) {
+        timeAgo = '1 minute ago';
+      } else {
+        timeAgo = '${diff.inMinutes} minutes ago';
+      }
+      timeAgo = '${diff.inMinutes} minutes ago';
+    } else if (diff.inHours < 24) {
+      timeAgo = '${diff.inHours} hours ago';
+    } else if (diff.inDays < 7) {
+      if (diff.inDays == 1) {
+        timeAgo = '1 day ago';
+      } else {
+        timeAgo = '${diff.inDays} days ago';
+      }
+    } else if (diff.inDays < 30) {
+      final weeks = (diff.inDays / 7).floor();
+      timeAgo = '$weeks weeks ago';
+    } else if (diff.inDays < 365) {
+      final months = (diff.inDays / 30).floor();
+      timeAgo = '$months months ago';
+    } else {
+      final years = (diff.inDays / 365).floor();
+      timeAgo = '$years years ago';
+    }
+    return timeAgo;
   }
 }

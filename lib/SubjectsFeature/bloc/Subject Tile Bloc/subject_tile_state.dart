@@ -19,8 +19,9 @@ class FollowedPagesLoading extends SubjectTileState {
 class FollowedPagesLoaded extends SubjectTileState {
   final String subjectId;
   final List<PageDataModel> pages;
+  final UrgentUpdateDataModel? urgentAnnouncement;
 
-  const FollowedPagesLoaded({required this.subjectId, required this.pages});
+  const FollowedPagesLoaded({required this.subjectId, required this.pages, this.urgentAnnouncement});
 
   @override
   List<Object> get props => [subjectId, pages];

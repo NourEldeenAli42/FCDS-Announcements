@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcds_announcements/FollowPageFeature/Data%20Models/course_data_model.dart';
 import 'package:fcds_announcements/FollowPageFeature/Data%20Models/page_data_model.dart';
+import 'package:fcds_announcements/HomeFeature/Models/urgent_announcement_data_model.dart';
 import 'package:fcds_announcements/utils/repositories/user_repository.dart';
 
 class SubjectsRepository {
@@ -41,5 +42,25 @@ class SubjectsRepository {
       }
     }
     return pages;
+  }
+  Future<UrgentUpdateDataModel?> getUrgentAnnouncement(
+    List<String> followedPageIds,
+  ) async {
+    if (followedPageIds.isEmpty) return null;
+
+    final query = await _db
+        .collection('announcements')
+        .where('page_id', whereIn: followedPageIds)
+        .where('isUrgent', isEqualTo: true)
+        .orderBy('post_time', descending: true)
+        .limit(1)
+        .get();
+    if (query.docs.isEmpty) {
+      return null;
+    }
+    final announcement = UrgentUpdateDataModel.fromFirestore(
+      query.docs.first.data(),
+    );
+    return announcement;
   }
 }

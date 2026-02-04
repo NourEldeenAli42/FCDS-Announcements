@@ -1,7 +1,8 @@
 import 'package:fcds_announcements/FollowPageFeature/Data%20Models/course_data_model.dart';
+import 'package:fcds_announcements/PageFeedFeature/page_feed_view.dart';
 import 'package:fcds_announcements/SubjectsFeature/Widgets/page_warning.dart';
 import 'package:fcds_announcements/SubjectsFeature/bloc/Subject%20Tile%20Bloc/subject_tile_bloc.dart';
-import 'package:fcds_announcements/utils/text_style.dart';
+import 'package:fcds_announcements/utils/Widgets/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -44,7 +45,13 @@ class SubjectTile extends StatelessWidget {
         children: [
           BlocBuilder<SubjectTileBloc, SubjectTileState>(
             builder: (context, state) {
-              return PageWarning();
+              return (state is FollowedPagesLoaded &&
+                      state.urgentAnnouncement != null)
+                  ? PageWarning(
+                      title: state.urgentAnnouncement!.titleText,
+                      message: state.urgentAnnouncement!.bodyText,
+                    )
+                  : SizedBox.shrink();
             },
           ),
           BlocBuilder<SubjectTileBloc, SubjectTileState>(
@@ -53,7 +60,7 @@ class SubjectTile extends StatelessWidget {
                 alignment: Alignment.center,
                 child: switch (state) {
                   SubjectTileInitial() || FollowedPagesLoading() => Container(
-                    margin: .all(20),
+                    margin: EdgeInsets.all(20),
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
@@ -73,8 +80,57 @@ class SubjectTile extends StatelessWidget {
                             children: pages
                                 .map(
                                   (page) => ListTile(
+                                    subtitle: Wrap(
+                                      children: [
+                                        for (var tag in page.tags)
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                              right: 6,
+                                              top: 4,
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 4,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.blueGrey.shade100,
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  Icons.circle,
+                                                  size: 8,
+                                                  color:
+                                                      Colors.blueGrey.shade800,
+                                                ),
+                                                SizedBox(width: 4),
+                                                Text(
+                                                  tag,
+                                                  style: MyTextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors
+                                                        .blueGrey
+                                                        .shade800,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                      ],
+                                    ),
                                     onTap: () {
-                                      // TODO: Route to page details and announcements
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => PageFeedView(
+                                            subject: subject,
+                                            page: page,
+                                          ),
+                                        ),
+                                      );
                                     },
                                     trailing: Icon(
                                       Icons.arrow_forward_ios_rounded,
@@ -92,7 +148,7 @@ class SubjectTile extends StatelessWidget {
                                       page.title,
                                       style: MyTextStyle(
                                         fontSize: 20,
-                                        fontWeight: .w500,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ),

@@ -1,7 +1,7 @@
 import 'package:fcds_announcements/FollowPageFeature/Data%20Models/course_data_model.dart';
 import 'package:fcds_announcements/FollowPageFeature/bloc/Pages%20Bloc/pages_bloc.dart';
 import 'package:fcds_announcements/FollowPageFeature/bloc/cubit/follow_page_cubit.dart';
-import 'package:fcds_announcements/utils/text_style.dart';
+import 'package:fcds_announcements/utils/Widgets/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';

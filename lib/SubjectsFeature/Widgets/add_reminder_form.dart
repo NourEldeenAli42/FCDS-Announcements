@@ -2,7 +2,7 @@ import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:day_night_time_picker/lib/state/time.dart';
 import 'package:fcds_announcements/RemindersFeature/bloc/reminders_bloc.dart';
 import 'package:fcds_announcements/utils/repositories/local_notifications_repository.dart';
-import 'package:fcds_announcements/utils/text_style.dart';
+import 'package:fcds_announcements/utils/Widgets/text_style.dart';
 import 'package:floating_snackbar/floating_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

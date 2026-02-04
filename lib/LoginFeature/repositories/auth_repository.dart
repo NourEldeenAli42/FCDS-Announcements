@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcds_announcements/RecentMessagesFeature/repositories/notification_reciever_repository.dart';
 import 'package:fcds_announcements/RemindersFeature/repository/reminders_repository.dart';
 import 'package:fcds_announcements/utils/repositories/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,6 +34,7 @@ class AuthRepository {
   }
 
   Future<void> signOut() async {
+    await NotificationRepository().deleteAllMessages();
     RemindersRepository().flutterLocalNotificationsPlugin
         .cancelAllPendingNotifications();
     List<String> followedPageIds = await UserRepository().getFollowedPageIds();
