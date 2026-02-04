@@ -5,11 +5,13 @@ class FunctionCard extends StatelessWidget {
   final Color color;
   final IconData icon;
   final String label;
+  final VoidCallback onTap;
   const FunctionCard({
     super.key,
     required this.icon,
     required this.label,
     required this.color,
+    required this.onTap,
   });
 
   @override
@@ -19,9 +21,7 @@ class FunctionCard extends StatelessWidget {
       child: InkWell(
         borderRadius: .circular(10),
         splashColor: color.withAlpha(30),
-        onTap: () {
-          // Handle card tap
-        },
+        onTap: onTap,
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(

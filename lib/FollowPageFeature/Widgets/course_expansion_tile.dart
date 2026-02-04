@@ -1,6 +1,6 @@
 import 'package:fcds_announcements/FollowPageFeature/Data%20Models/course_data_model.dart';
-import 'package:fcds_announcements/FollowPageFeature/bloc/Follow%20Bloc/follow_bloc.dart';
 import 'package:fcds_announcements/FollowPageFeature/bloc/Pages%20Bloc/pages_bloc.dart';
+import 'package:fcds_announcements/FollowPageFeature/bloc/cubit/follow_page_cubit.dart';
 import 'package:fcds_announcements/utils/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,14 +16,14 @@ class CourseExpansionTile extends StatefulWidget {
 
 class _CourseExpansionTileState extends State<CourseExpansionTile> {
   late PagesBloc _searchPagesBloc;
-  late FollowBloc _followBloc;
+  late FollowPageCubit _followCubit;
   bool _isExpanded = false;
 
   @override
   void initState() {
     super.initState();
     _searchPagesBloc = PagesBloc();
-    _followBloc = FollowBloc();
+    _followCubit = FollowPageCubit(widget.page.id);
   }
 
   @override
@@ -37,20 +37,22 @@ class _CourseExpansionTileState extends State<CourseExpansionTile> {
       // Reset the bloc to clear previous state
       _searchPagesBloc.close();
       _searchPagesBloc = PagesBloc();
+      _followCubit.close();
+      _followCubit = FollowPageCubit(widget.page.id);
     }
   }
 
   @override
   void dispose() {
     _searchPagesBloc.close();
-    _followBloc.close();
+    _followCubit.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: _followBloc,
+      value: _followCubit,
       child: BlocProvider.value(
         value: _searchPagesBloc,
         child: BlocBuilder<PagesBloc, PagesState>(
@@ -125,99 +127,92 @@ class _CourseExpansionTileState extends State<CourseExpansionTile> {
                   )
                 else if (state is SearchPagesLoaded && state.pages.isNotEmpty)
                   ...state.pages.map(
-                    (p) => ListTile(
-                      trailing: BlocBuilder<FollowBloc, FollowState>(
-                        builder: (context, state) {
-                          return OutlinedButton(
-                            onPressed: () {
-                              if (state.getStatus(p.id) ==
-                                      PageFollowStatus.loading ||
-                                  state.getStatus(p.id) ==
-                                      PageFollowStatus.success) {
-                                return; // Prevent multiple clicks while loading or after success
-                              }
-                              context.read<FollowBloc>().add(
-                                FollowPageEvent(
-                                  pageName: p.id,
-                                  isFollowed: p.isFollowed,
-                                ),
-                              );
-                            },
-                            child: BlocBuilder<FollowBloc, FollowState>(
-                              builder: (context, state) {
-                                final status = state.getStatus(p.id);
-
-                                if (status == PageFollowStatus.loading) {
-                                  return SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                    ),
-                                  );
-                                } else if (status == PageFollowStatus.success) {
-                                  return Icon(Icons.check, color: Colors.green);
-                                } else if (p.isFollowed) {
-                                  return Text(
+                    (p) => BlocProvider(
+                      create: (context) => FollowPageCubit(p.id),
+                      child: ListTile(
+                        trailing: BlocBuilder<FollowPageCubit, FollowPageState>(
+                          builder: (context, state) {
+                            switch (state) {
+                              case FollowPageFollowed():
+                                return OutlinedButton(
+                                  style: ButtonStyle(),
+                                  onPressed: () {
+                                    context
+                                        .read<FollowPageCubit>()
+                                        .unfollowPage(p.id);
+                                  },
+                                  child: Text(
                                     'Unfollow',
                                     style: MyTextStyle(
-                                      fontSize: 14,
                                       color: Colors.red,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: .w700,
                                     ),
-                                  );
-                                } else {
-                                  return Text(
+                                  ),
+                                );
+                              case FollowPageLoading() || FollowPageInitial():
+                                return SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Color.fromARGB(255, 53, 125, 101),
+                                  ),
+                                );
+                              case FollowPageUnfollowed():
+                                return OutlinedButton(
+                                  onPressed: () {
+                                    context.read<FollowPageCubit>().followPage(
+                                      p.id,
+                                    );
+                                  },
+                                  child: Text(
                                     'Follow',
                                     style: MyTextStyle(
-                                      fontSize: 14,
-                                      color: Color.fromARGB(255, 20, 156, 112),
-                                      fontWeight: FontWeight.w600,
+                                      color: Color.fromARGB(255, 53, 125, 101),
+                                      fontWeight: .w700,
                                     ),
-                                  );
-                                }
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                      title: Text(
-                        p.title,
-                        style: MyTextStyle(fontSize: 16, fontWeight: .bold),
-                      ),
-                      subtitle: Wrap(
-                        children: [
-                          for (var tag in p.tags)
-                            Container(
-                              margin: EdgeInsets.only(right: 6, top: 4),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.blueGrey.shade100,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                mainAxisSize: .min,
-                                children: [
-                                  Icon(
-                                    Icons.circle,
-                                    size: 8,
-                                    color: Colors.blueGrey.shade800,
                                   ),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    tag,
-                                    style: MyTextStyle(
-                                      fontSize: 12,
+                                );
+                            }
+                          },
+                        ),
+                        title: Text(
+                          p.title,
+                          style: MyTextStyle(fontSize: 16, fontWeight: .bold),
+                        ),
+                        subtitle: Wrap(
+                          children: [
+                            for (var tag in p.tags)
+                              Container(
+                                margin: EdgeInsets.only(right: 6, top: 4),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.blueGrey.shade100,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  mainAxisSize: .min,
+                                  children: [
+                                    Icon(
+                                      Icons.circle,
+                                      size: 8,
                                       color: Colors.blueGrey.shade800,
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(width: 4),
+                                    Text(
+                                      tag,
+                                      style: MyTextStyle(
+                                        fontSize: 12,
+                                        color: Colors.blueGrey.shade800,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

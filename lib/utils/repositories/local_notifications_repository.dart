@@ -30,14 +30,13 @@ class LocalNotificationsRepository {
   }
 
   Future<void> scheduleNotification({
-    int id = 1,
     required String title,
     required String body,
     required DateTime scheduledDate,
   }) async {
     var scheduledTZDate = tz.TZDateTime.from(scheduledDate, tz.local);
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      id: id,
+      id: scheduledDate.millisecondsSinceEpoch ~/ 1000,
       title: title,
       body: body,
       scheduledDate: scheduledTZDate,

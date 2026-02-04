@@ -1,4 +1,5 @@
 import 'package:fcds_announcements/FollowPageFeature/Data%20Models/course_data_model.dart';
+import 'package:fcds_announcements/SubjectsFeature/Widgets/page_warning.dart';
 import 'package:fcds_announcements/SubjectsFeature/bloc/Subject%20Tile%20Bloc/subject_tile_bloc.dart';
 import 'package:fcds_announcements/utils/text_style.dart';
 import 'package:flutter/material.dart';
@@ -28,65 +29,22 @@ class SubjectTile extends StatelessWidget {
           }
         },
         leading: CircleAvatar(
-          radius: 25,
+          radius: 20,
           backgroundColor: color.computeLuminance() < 0.5
               ? color.withValues(alpha: 0.2)
               : color.withValues(alpha: 0.6),
-          child: Icon(icon, size: 28, color: color),
+          child: Icon(icon, size: 20, color: color),
         ),
         collapsedShape: Border(),
         shape: Border(),
         title: Text(
           subject.name,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         children: [
           BlocBuilder<SubjectTileBloc, SubjectTileState>(
             builder: (context, state) {
-              return Container(
-                margin: .all(10),
-                decoration: BoxDecoration(
-                  color: Colors.orange.shade100,
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(4),
-                    bottomRight: Radius.circular(4),
-                  ),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                alignment: Alignment.centerLeft,
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.warning_amber_rounded,
-                      size: 30,
-                      color: Colors.orange,
-                    ),
-                    const SizedBox(width: 8),
-                    Column(
-                      children: [
-                        Text(
-                          'Upcoming Exam',
-                          style: MyTextStyle(
-                            fontSize: 16,
-                            fontWeight: .bold,
-                            color: Color.fromARGB(255, 146, 96, 38),
-                          ),
-                        ),
-                        Text(
-                          'Date: 25th Dec 2024',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color.fromARGB(255, 199, 165, 70),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
+              return PageWarning();
             },
           ),
           BlocBuilder<SubjectTileBloc, SubjectTileState>(
@@ -94,8 +52,14 @@ class SubjectTile extends StatelessWidget {
               return Container(
                 alignment: Alignment.center,
                 child: switch (state) {
-                  SubjectTileInitial() ||
-                  FollowedPagesLoading() => CircularProgressIndicator(),
+                  SubjectTileInitial() || FollowedPagesLoading() => Container(
+                    margin: .all(20),
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Color.fromARGB(255, 53, 125, 101),
+                    ),
+                  ),
                   FollowedPagesLoaded(:final pages) =>
                     pages.isEmpty
                         ? Text(
@@ -109,6 +73,14 @@ class SubjectTile extends StatelessWidget {
                             children: pages
                                 .map(
                                   (page) => ListTile(
+                                    onTap: () {
+                                      // TODO: Route to page details and announcements
+                                    },
+                                    trailing: Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      size: 16,
+                                      color: Colors.grey.shade700,
+                                    ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),
                                       side: BorderSide(
@@ -118,7 +90,10 @@ class SubjectTile extends StatelessWidget {
 
                                     title: Text(
                                       page.title,
-                                      style: MyTextStyle(fontSize: 16),
+                                      style: MyTextStyle(
+                                        fontSize: 20,
+                                        fontWeight: .w500,
+                                      ),
                                     ),
                                   ),
                                 )

@@ -5,6 +5,7 @@ import 'package:fcds_announcements/HomeFeature/bloc/Announcement%20Bloc/announce
 import 'package:fcds_announcements/HomeFeature/bloc/Priority%20Deadline%20Bloc/priority_deadline_bloc.dart';
 import 'package:fcds_announcements/HomeFeature/repositories/priority_deadline_repository.dart';
 import 'package:fcds_announcements/HomeFeature/repositories/urgent_update_repository.dart';
+import 'package:fcds_announcements/SubjectsFeature/Widgets/add_reminder_form.dart';
 import 'package:fcds_announcements/utils/repositories/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -126,16 +127,33 @@ class HomeView extends StatelessWidget {
                             icon: Icons.book,
                             label: 'Materials',
                             color: Colors.blue,
+                            onTap: () {
+                              // Navigate to Materials page
+                            },
                           ),
                           FunctionCard(
                             icon: Icons.messenger_outline_sharp,
                             label: 'Messages',
                             color: Colors.purple,
+                            onTap: () {
+                              // Navigate to Messages page
+                            },
                           ),
                           FunctionCard(
                             icon: Icons.alarm,
-                            label: 'Set Alarm',
+                            label: 'Set Reminder',
                             color: Colors.orange,
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('Set Reminder'),
+                                    content: AddReminderForm(),
+                                  );
+                                },
+                              );
+                            },
                           ),
                         ],
                       ),

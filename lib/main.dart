@@ -1,11 +1,13 @@
 import 'package:fcds_announcements/LoginFeature/login_view.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
 import 'package:fcds_announcements/main_view.dart';
+import 'package:fcds_announcements/RemindersFeature/bloc/reminders_bloc.dart';
 import 'package:fcds_announcements/utils/repositories/firebase_messaging_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 
@@ -30,7 +32,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       routes: {'/home': (context) => HomeView()},
       title: 'FCDS Announcements',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.tealAccent),
+      ),
       home: const AuthWrapper(),
     );
   }
@@ -54,7 +58,10 @@ class AuthWrapper extends StatelessWidget {
 
         // 2. If the snapshot has user data, they are logged in
         if (snapshot.hasData) {
-          return MainView();
+          return BlocProvider(
+            create: (context) => RemindersBloc(),
+            child: MainView(),
+          );
         }
 
         // 3. Otherwise, show the login screen
