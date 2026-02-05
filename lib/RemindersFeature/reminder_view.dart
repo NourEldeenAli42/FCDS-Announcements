@@ -1,26 +1,139 @@
-import 'package:fcds_announcements/RemindersFeature/bloc/reminders_bloc.dart';
+import 'package:easy_date_timeline/easy_date_timeline.dart';
+import 'package:fcds_announcements/RemindersFeature/bloc/Events%20Bloc/events_bloc.dart';
+import 'package:fcds_announcements/RemindersFeature/bloc/Reminders%20Bloc/reminders_bloc.dart';
 import 'package:fcds_announcements/RemindersFeature/repository/reminders_repository.dart';
 import 'package:fcds_announcements/utils/Widgets/text_style.dart';
+import 'package:fcds_announcements/utils/Widgets/unread.dart';
 import 'package:floating_snackbar/floating_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ReminderView extends StatelessWidget {
   const ReminderView({super.key});
   final Color color = const Color.fromARGB(255, 53, 125, 101);
 
+  String _getDayName(int weekday) {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    return days[weekday - 1];
+  }
+
   @override
   Widget build(BuildContext context) {
     // Load reminders when the view is built
     context.read<RemindersBloc>().add(const LoadRemindersEvent());
+    context.read<EventsBloc>().add(const LoadEventsEvent());
 
     return RefreshIndicator(
       onRefresh: () async {
         context.read<RemindersBloc>().add(const LoadRemindersEvent());
+        context.read<EventsBloc>().add(const LoadEventsEvent());
       },
       child: ListView(
         padding: EdgeInsets.all(10),
         children: [
+          BlocBuilder<EventsBloc, EventsState>(
+            builder: (context, state) {
+              if (state is EventsLoadedState && state.events.isNotEmpty) {
+                // Create a set of dates that have events
+                final eventDates = state.events
+                    .map((event) {
+                      final deadline = event.deadline;
+                      if (deadline != null) {
+                        return DateTime(
+                          deadline.year,
+                          deadline.month,
+                          deadline.day,
+                        );
+                      }
+                      return null;
+                    })
+                    .whereType<DateTime>()
+                    .toSet();
+
+                return EasyDateTimeLine(
+                  dayProps: EasyDayProps(height: 60),
+                  initialDate: DateTime.now(),
+                  timeLineProps: EasyTimeLineProps(),
+                  itemBuilder: (context, date, isSelected, onTap) {
+                    // Normalize the date to compare (remove time component)
+                    final normalizedDate = DateTime(
+                      date.year,
+                      date.month,
+                      date.day,
+                    );
+                    final hasEvent = eventDates.contains(normalizedDate);
+                    final isToday =
+                        normalizedDate ==
+                        DateTime(
+                          DateTime.now().year,
+                          DateTime.now().month,
+                          DateTime.now().day,
+                        );
+
+                    // Get the default widget from the package
+                    final dateWidget = InkWell(
+                      onTap: onTap,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isSelected ? color : Colors.transparent,
+                          border: isToday && !isSelected
+                              ? Border.all(color: color, width: 2)
+                              : null,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '${date.day}',
+                              style: MyTextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: isSelected ? Colors.white : Colors.black,
+                              ),
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                              _getDayName(date.weekday),
+                              style: MyTextStyle(
+                                fontSize: 10,
+                                color: isSelected
+                                    ? Colors.white
+                                    : Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+
+                    // Wrap with Unread widget if this date has an event
+                    return hasEvent
+                        ? Unread(isUnread: true, child: dateWidget)
+                        : dateWidget;
+                  },
+                );
+              } else if (state is EventsLoadingState) {
+                return Shimmer(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.grey[300]!,
+                      Colors.grey[100]!,
+                      Colors.grey[300]!,
+                    ],
+                  ),
+                  child: EasyDateTimeLine(initialDate: DateTime.now()),
+                );
+              } else {
+                return SizedBox.shrink();
+              }
+            },
+          ),
           Text(
             'Reminders',
             style: MyTextStyle(fontSize: 35, fontWeight: FontWeight.bold),

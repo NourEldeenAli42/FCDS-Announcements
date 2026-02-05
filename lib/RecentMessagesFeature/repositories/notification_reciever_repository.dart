@@ -1,7 +1,7 @@
 import 'package:fcds_announcements/RecentMessagesFeature/Data%20Models/notification_data_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
 @pragma('vm:entry-point')
@@ -29,8 +29,8 @@ class NotificationRepository {
     // 2. Map RemoteMessage to our Model
     final newItem = NotificationItemDataModel()
       ..messageId = message.messageId
-      ..title = message.notification?.title
-      ..body = message.notification?.body
+      ..title = message.data['title'] ?? message.notification?.title
+      ..body = message.data['body'] ?? message.notification?.body
       ..timestamp = DateTime.now();
 
     // 3. Perform a synchronous write (fastest for background)

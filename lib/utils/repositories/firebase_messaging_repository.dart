@@ -1,11 +1,14 @@
-import 'dart:developer';
-
 import 'package:fcds_announcements/RecentMessagesFeature/repositories/notification_reciever_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await NotificationRepository.saveNotification(message);
+}
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -46,11 +49,6 @@ class FirebaseMessagingRepository {
     FirebaseMessaging.onMessage.listen(handleNotification);
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
-}
-
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  log('saving');
-  await NotificationRepository.saveNotification(message);
 }
 
 Future<void> handleNotification(RemoteMessage message) async {

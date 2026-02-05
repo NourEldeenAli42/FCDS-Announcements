@@ -3,7 +3,7 @@ import 'package:crystal_navigation_bar/crystal_navigation_bar.dart';
 import 'package:fcds_announcements/FollowPageFeature/search_courses.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
 import 'package:fcds_announcements/LoginFeature/repositories/auth_repository.dart';
-import 'package:fcds_announcements/RemindersFeature/bloc/reminders_bloc.dart';
+import 'package:fcds_announcements/RemindersFeature/bloc/Reminders%20Bloc/reminders_bloc.dart';
 import 'package:fcds_announcements/RemindersFeature/reminder_view.dart';
 import 'package:fcds_announcements/SubjectsFeature/Widgets/add_reminder_form.dart';
 import 'package:fcds_announcements/SubjectsFeature/subjects_view.dart';
@@ -23,14 +23,14 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
-  final _pageViewController = PageController(initialPage: 1);
+  final _pageViewController = PageController();
   @override
   dispose() {
     _pageViewController.dispose();
     super.dispose();
   }
 
-  int _currentIndex = 1;
+  int _currentIndex = 0;
   Widget getCurrentPage(int index) {
     switch (index) {
       case 0:

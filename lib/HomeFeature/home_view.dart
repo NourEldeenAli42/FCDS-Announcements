@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fcds_announcements/HomeFeature/Widgets/function_card.dart';
 import 'package:fcds_announcements/HomeFeature/Widgets/priority_deadline.dart';
 import 'package:fcds_announcements/HomeFeature/Widgets/urgent_announcement.dart';
@@ -9,6 +11,7 @@ import 'package:fcds_announcements/HomeFeature/repositories/urgent_update_reposi
 import 'package:fcds_announcements/SubjectsFeature/Widgets/add_reminder_form.dart';
 import 'package:fcds_announcements/utils/Widgets/unread.dart';
 import 'package:fcds_announcements/utils/repositories/user_repository.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
@@ -139,8 +142,16 @@ class HomeView extends StatelessWidget {
                               icon: Icons.book,
                               label: 'Materials',
                               color: Colors.blue,
-                              onTap: () {
-                                // Navigate to Materials page
+                              onTap: () async {
+                                log(
+                                  (await FirebaseMessaging.instance.getToken())
+                                      .toString(),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Materials coming soon!'),
+                                  ),
+                                );
                               },
                             ),
                             BlocBuilder<

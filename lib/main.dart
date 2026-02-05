@@ -1,8 +1,9 @@
 import 'package:fcds_announcements/LoginFeature/login_view.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
 import 'package:fcds_announcements/RecentMessagesFeature/messages_view.dart';
+import 'package:fcds_announcements/RemindersFeature/bloc/Events%20Bloc/events_bloc.dart';
 import 'package:fcds_announcements/main_view.dart';
-import 'package:fcds_announcements/RemindersFeature/bloc/reminders_bloc.dart';
+import 'package:fcds_announcements/RemindersFeature/bloc/Reminders%20Bloc/reminders_bloc.dart';
 import 'package:fcds_announcements/utils/repositories/firebase_messaging_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -64,7 +65,10 @@ class AuthWrapper extends StatelessWidget {
         if (snapshot.hasData) {
           return BlocProvider(
             create: (context) => RemindersBloc(),
-            child: MainView(),
+            child: BlocProvider(
+              create: (context) => EventsBloc(),
+              child: MainView(),
+            ),
           );
         }
 

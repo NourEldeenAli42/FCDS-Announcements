@@ -1,6 +1,6 @@
-import 'package:isar/isar.dart';
-
 // This line is needed for code generation
+import 'package:isar_community/isar.dart';
+
 part 'notification_data_model.g.dart';
 
 @collection
