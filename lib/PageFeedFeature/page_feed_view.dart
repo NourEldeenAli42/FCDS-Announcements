@@ -5,6 +5,7 @@ import 'package:fcds_announcements/PageFeedFeature/bloc/feed_bloc.dart';
 import 'package:fcds_announcements/utils/Widgets/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:timelines_plus/timelines_plus.dart';
 
 class PageFeedView extends StatelessWidget {
   final CourseDataModel subject;
@@ -28,7 +29,7 @@ class PageFeedView extends StatelessWidget {
               Navigator.pop(context);
             },
             icon: Icon(Icons.arrow_back_ios_new),
-            color: Color.fromARGB(255, 32, 223, 159),
+            color: Color.fromARGB(255, 34, 125, 109),
           ),
         ),
         body: Padding(
@@ -81,13 +82,31 @@ class PageFeedView extends StatelessWidget {
                       );
                     } else if (state is FeedLoaded &&
                         state.announcements.isNotEmpty) {
-                      return ListView.builder(
-                        itemCount: state.announcements.length,
-                        itemBuilder: (context, index) {
-                          return Announcement(
+                      return Timeline.tileBuilder(
+                        theme: TimelineThemeData(
+                          nodePosition: 0,
+                          connectorTheme: ConnectorThemeData(
+                            thickness: 2.0,
+                            color: Colors.grey.shade300,
+                          ),
+                          indicatorTheme: IndicatorThemeData(size: 20.0),
+                        ),
+                        builder: TimelineTileBuilder(
+                          contentsAlign: .basic,
+                          indicatorBuilder: (context, index) => DotIndicator(
+                            color: Color.fromARGB(255, 34, 125, 109),
+                          ),
+                          endConnectorBuilder: (context, index) =>
+                              SolidLineConnector(color: Colors.grey.shade300),
+                          startConnectorBuilder: (context, index) =>
+                              SolidLineConnector(color: Colors.grey.shade300),
+                          itemCount: state.announcements.length,
+                          contentsBuilder: (context, index) => Announcement(
                             announcement: state.announcements[index],
-                          );
-                        },
+                          ),
+                        ),
+                        shrinkWrap: true,
+                        physics: AlwaysScrollableScrollPhysics(),
                       );
                     } else if (state is FeedLoaded &&
                         state.announcements.isEmpty) {

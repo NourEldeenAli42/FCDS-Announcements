@@ -1,5 +1,6 @@
 import 'package:fcds_announcements/LoginFeature/login_view.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
+import 'package:fcds_announcements/ProfileFeature/profile_view.dart';
 import 'package:fcds_announcements/RecentMessagesFeature/messages_view.dart';
 import 'package:fcds_announcements/RemindersFeature/bloc/Events%20Bloc/events_bloc.dart';
 import 'package:fcds_announcements/main_view.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => HomeView(),
         '/messages': (context) => MessagesView(),
+        '/profile': (context) => ProfileView(),
       },
       title: 'FCDS Announcements',
       theme: ThemeData(

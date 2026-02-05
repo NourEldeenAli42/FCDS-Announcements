@@ -135,7 +135,11 @@ class MessagesView extends StatelessWidget {
                           final message = messages[index];
                           return Dismissible(
                             background: Container(
-                              color: Colors.red,
+                              margin: .all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
                               alignment: Alignment.centerRight,
                               padding: const EdgeInsets.only(right: 20),
                               child: const Icon(
@@ -150,6 +154,8 @@ class MessagesView extends StatelessWidget {
                               );
                             },
                             child: InkWell(
+                              borderRadius: .circular(8),
+                              radius: 50,
                               child: RecentNotification(notification: message),
                               onTap: () {
                                 context.read<MessagesBloc>().add(

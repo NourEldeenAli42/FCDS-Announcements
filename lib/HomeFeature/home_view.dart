@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:fcds_announcements/HomeFeature/Widgets/function_card.dart';
 import 'package:fcds_announcements/HomeFeature/Widgets/priority_deadline.dart';
 import 'package:fcds_announcements/HomeFeature/Widgets/urgent_announcement.dart';
@@ -9,9 +7,7 @@ import 'package:fcds_announcements/HomeFeature/bloc/Priority%20Deadline%20Bloc/p
 import 'package:fcds_announcements/HomeFeature/repositories/priority_deadline_repository.dart';
 import 'package:fcds_announcements/HomeFeature/repositories/urgent_update_repository.dart';
 import 'package:fcds_announcements/SubjectsFeature/Widgets/add_reminder_form.dart';
-import 'package:fcds_announcements/utils/Widgets/unread.dart';
 import 'package:fcds_announcements/utils/repositories/user_repository.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
@@ -136,43 +132,19 @@ class HomeView extends StatelessWidget {
                           },
                         ),
                         SizedBox(height: 20),
-                        Wrap(
+                        Column(
                           children: [
-                            FunctionCard(
-                              icon: Icons.book,
-                              label: 'Materials',
-                              color: Colors.blue,
-                              onTap: () async {
-                                log(
-                                  (await FirebaseMessaging.instance.getToken())
-                                      .toString(),
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Materials coming soon!'),
-                                  ),
-                                );
-                              },
-                            ),
-                            BlocBuilder<
-                              FunctionButtonsBloc,
-                              FunctionButtonsState
-                            >(
+                            BlocBuilder<FunctionButtonsBloc, FunctionButtonsState>(
                               builder: (context, state) {
                                 if (state is FunctionButtonsReadLoaded) {
-                                  return Unread(
-                                    isUnread: state.hasUnreadMessages,
-                                    child: FunctionCard(
-                                      icon: Icons.messenger_outline_sharp,
-                                      label: 'Messages',
-                                      color: Colors.purple,
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                          context,
-                                          '/messages',
-                                        );
-                                      },
-                                    ),
+                                  return FunctionCard(
+                                    hasUnread: state.hasUnreadMessages,
+                                    icon: Icons.messenger_outline_sharp,
+                                    label: 'Messages',
+                                    color: Colors.purple,
+                                    onTap: () {
+                                      Navigator.pushNamed(context, '/messages');
+                                    },
                                   );
                                 } else {
                                   return FunctionCard(
@@ -186,23 +158,24 @@ class HomeView extends StatelessWidget {
                                 }
                               },
                             ),
-                            FunctionCard(
-                              icon: Icons.alarm,
-                              label: 'Set Reminder',
-                              color: Colors.orange,
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: Text('Set Reminder'),
-                                      content: AddReminderForm(),
-                                    );
-                                  },
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                        FunctionCard(
+                          icon: Icons.alarm,
+                          label: 'Set Reminder',
+                          color: Colors.orange,
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('Set Reminder'),
+                                  content: AddReminderForm(),
                                 );
                               },
-                            ),
-                          ],
+                            );
+                          },
                         ),
                       ],
                     ),

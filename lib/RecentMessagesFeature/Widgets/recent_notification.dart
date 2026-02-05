@@ -15,6 +15,19 @@ class RecentNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: .all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withAlpha(100),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
       margin: .symmetric(vertical: 8),
       child: Row(
         crossAxisAlignment: .start,

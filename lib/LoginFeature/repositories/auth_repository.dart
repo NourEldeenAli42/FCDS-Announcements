@@ -20,11 +20,18 @@ class AuthRepository {
       GoogleAuthProvider.credential(idToken: (user?.authentication)?.idToken),
     );
     final db = FirebaseFirestore.instance;
-    db.collection('users').doc(_firebaseAuth.currentUser!.uid).update({
-      'email': _firebaseAuth.currentUser!.email,
-      'name': _firebaseAuth.currentUser!.displayName,
-      'following': FieldValue.arrayUnion([]),
-    });
+    final userDoc = await db
+        .collection('users')
+        .doc(_firebaseAuth.currentUser!.uid)
+        .get();
+    if (!userDoc.exists) {
+      await db.collection('users').doc(_firebaseAuth.currentUser!.uid).set({
+        'name': _firebaseAuth.currentUser!.displayName,
+        'email': _firebaseAuth.currentUser!.email,
+        'following': ['welcoming'],
+      });
+    }
+
     // Subscribe to topics for push notifications
     List<String> followedPageIds = await UserRepository().getFollowedPageIds();
     for (var pageId in followedPageIds) {

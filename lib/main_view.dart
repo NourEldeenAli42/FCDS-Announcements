@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crystal_navigation_bar/crystal_navigation_bar.dart';
 import 'package:fcds_announcements/FollowPageFeature/search_courses.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
-import 'package:fcds_announcements/LoginFeature/repositories/auth_repository.dart';
+import 'package:fcds_announcements/QuickLinksFeature/quick_links_view.dart';
 import 'package:fcds_announcements/RemindersFeature/bloc/Reminders%20Bloc/reminders_bloc.dart';
 import 'package:fcds_announcements/RemindersFeature/reminder_view.dart';
 import 'package:fcds_announcements/SubjectsFeature/Widgets/add_reminder_form.dart';
@@ -41,11 +41,9 @@ class _MainViewState extends State<MainView> {
           child: SubjectsView(),
         );
       case 2:
-        return Center(child: Text('Favorites'));
-      case 3:
         return ReminderView();
-      case 4:
-        return Center(child: Text('Profile'));
+      case 3:
+        return QuickLinksView();
       default:
         return HomeView();
     }
@@ -54,7 +52,6 @@ class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       floatingActionButton: _currentIndex == 1
           ? FloatingActionButton(
               onPressed: () {
@@ -63,7 +60,7 @@ class _MainViewState extends State<MainView> {
               backgroundColor: Color.fromARGB(255, 54, 125, 101),
               child: Icon(Icons.add, color: Colors.white),
             )
-          : _currentIndex == 3
+          : _currentIndex == 2
           ? FloatingActionButton(
               onPressed: () {
                 showDialog(
@@ -117,30 +114,23 @@ class _MainViewState extends State<MainView> {
               selectedColor: Colors.white,
             ),
 
-            /// Add
+            /// Subjects
             CrystalNavigationBarItem(
               icon: Icons.school,
               unselectedIcon: Icons.school,
-              selectedColor: Color.fromARGB(255, 54, 125, 101),
+              selectedColor: Colors.amberAccent,
             ),
 
-            /// Favourite
-            CrystalNavigationBarItem(
-              icon: Icons.favorite,
-              unselectedIcon: Icons.favorite_border,
-              selectedColor: Colors.red,
-            ),
-
-            /// Search
+            /// Reminders
             CrystalNavigationBarItem(
               icon: Icons.alarm,
               unselectedIcon: Icons.alarm,
               selectedColor: Color.fromARGB(255, 54, 125, 101),
             ),
 
-            /// Profile
+            /// Links
             CrystalNavigationBarItem(
-              icon: Icons.person,
+              icon: Icons.link,
               unselectedIcon: Icons.person,
               selectedColor: Colors.white,
             ),
@@ -180,44 +170,7 @@ class _MainViewState extends State<MainView> {
         actions: [
           InkWell(
             onTap: () {
-              showDialog(
-                context: context,
-                builder: (dialogContext) {
-                  return AlertDialog(
-                    title: Text(
-                      'Logout',
-                      style: MyTextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    content: Text(
-                      'Are you sure you want to logout?\nAll your reminders and messages history will be cleared from this device.',
-                      style: MyTextStyle(),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(dialogContext).pop();
-                        },
-                        child: Text(
-                          'Cancel',
-                          style: MyTextStyle(color: Colors.grey),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          await AuthRepository().signOut();
-                          if (dialogContext.mounted) {
-                            Navigator.of(dialogContext).pop();
-                          }
-                        },
-                        child: Text(
-                          'Logout',
-                          style: MyTextStyle(color: Colors.red),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              );
+              Navigator.pushNamed(context, '/profile');
             },
             child: Stack(
               children: [
@@ -246,11 +199,11 @@ class _MainViewState extends State<MainView> {
                   child: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.red,
+                      color: Colors.grey[800],
                       border: Border.all(color: Colors.white, width: 2),
                     ),
                     padding: EdgeInsets.all(4),
-                    child: Icon(Icons.logout, color: Colors.white, size: 12),
+                    child: Icon(Icons.person, color: Colors.white, size: 12),
                   ),
                 ),
               ],
@@ -265,7 +218,7 @@ class _MainViewState extends State<MainView> {
             _currentIndex = index;
           });
         },
-        children: List.generate(5, (index) => getCurrentPage(index)),
+        children: List.generate(4, (index) => getCurrentPage(index)),
       ),
     );
   }

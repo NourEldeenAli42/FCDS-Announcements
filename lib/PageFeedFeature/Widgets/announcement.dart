@@ -2,6 +2,7 @@ import 'package:fcds_announcements/PageFeedFeature/Data%20Models/announcement_da
 import 'package:fcds_announcements/utils/Widgets/text_style.dart';
 import 'package:fcds_announcements/utils/date_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Announcement extends StatelessWidget {
@@ -58,7 +59,11 @@ class Announcement extends StatelessWidget {
                   mainAxisAlignment: .center,
                   children: [
                     announcement.redirectUrl.contains('drive')
-                        ? Icon(Icons.add_to_drive)
+                        ? FaIcon(
+                            FontAwesomeIcons.googleDrive,
+                            color: Color.fromARGB(255, 40, 127, 111),
+                            size: 20,
+                          )
                         : announcement.redirectUrl.contains('chameleon')
                         ? Image.asset(
                             'assets/chameleon.webp',
