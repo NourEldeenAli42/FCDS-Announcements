@@ -24,7 +24,7 @@ We’re fully responsible for:
 We'd be glad to have you affect the application in the future releases.
 So if you have any suggestions, bug reports, or any other feedback you want to give us, please submit this [Form](https://docs.google.com/forms/d/e/1FAIpQLSelJIqB7YYE8zmNfe6daG0zsnpjINzo8-ea1mBCV3at1rjiMA/viewform?usp=header), we'll totally be happy to hear from you !
 
-📜 License
+# 📜 License
 This project is licensed under the MIT License.
 
 # Contact
