@@ -10,7 +10,7 @@ We’re fully responsible for:
 
 # ⬇️ How to Downlaod
 - Go to Releases Section in this github repository, and download the latest release apk
-- Or directly from this [link](https://github.com/NourEldeenAli42/FCDS-Announcements/releases/download/Release/FCDS_Announcements.apk)
+- Or directly from this [Link](https://github.com/NourEldeenAli42/FCDS-Announcements/releases/download/Release/FCDS_Announcements.apk)
 
 
 # 🚀 Features
@@ -20,11 +20,9 @@ We’re fully responsible for:
 - Reminder scheduling for deadlines
 - Clean, responsive design
 
-
-📥 Download
-👉 Download FCDS Announcements APK (example.com in Bing)
-(Replace with your actual hosting link once uploaded)
-
+# 🔙 Feedback
+We'd be glad to have you affect the application in the future releases.
+So if you have any suggestions, bug reports, or any other feedback you want to give us, please submit this [Form](https://docs.google.com/forms/d/e/1FAIpQLSelJIqB7YYE8zmNfe6daG0zsnpjINzo8-ea1mBCV3at1rjiMA/viewform?usp=header), we'll totally be happy to hear from you !
 
 📜 License
 This project is licensed under the MIT License.
