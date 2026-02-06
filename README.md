@@ -6,7 +6,7 @@ We’re fully responsible for:
 - Posting announcements
 - Managing any errors that may happen
 - You can also schedule reminders sent as notifications at any time to track deadlines.
-👨‍💻 Lead Developer: Nour "Eldeen" Ali
+- 👨‍💻 Lead Developer: Nour "Eldeen" Ali
 
 # ⬇️ How to Downlaod
 - Go to Releases Section in this github repository, and download the latest release apk
