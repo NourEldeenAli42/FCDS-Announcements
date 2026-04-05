@@ -131,7 +131,7 @@ class _MainViewState extends State<MainView> {
             /// Links
             CrystalNavigationBarItem(
               icon: Icons.link,
-              unselectedIcon: Icons.person,
+              unselectedIcon: Icons.link,
               selectedColor: Colors.white,
             ),
           ],
@@ -183,6 +183,10 @@ class _MainViewState extends State<MainView> {
                     radius: 20,
                     backgroundColor: Colors.grey[300],
                     child: CachedNetworkImage(
+                      placeholder: (context, url) => CircleAvatar(
+                        radius: 18,
+                        backgroundImage: AssetImage(Assets.assetsLinks),
+                      ),
                       imageUrl:
                           FirebaseAuth.instance.currentUser?.photoURL ??
                           Assets.assetsLinks,

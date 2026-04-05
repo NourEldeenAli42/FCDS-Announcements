@@ -63,8 +63,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '921251262968',
     projectId: 'fcds-announcements-7dbbd',
     storageBucket: 'fcds-announcements-7dbbd.firebasestorage.app',
-    androidClientId: '921251262968-s1gmppeocm30iiokgmuj6c893d0fi4he.apps.googleusercontent.com',
+    androidClientId: '921251262968-0fs6mdptsfgfudqo73mleq7qa7pma682.apps.googleusercontent.com',
     iosClientId: '921251262968-q1r3pql47o1gstej8ea4mepoem3o3edv.apps.googleusercontent.com',
     iosBundleId: 'com.TeamMaterials.fcdsAnnouncements',
   );
+
 }

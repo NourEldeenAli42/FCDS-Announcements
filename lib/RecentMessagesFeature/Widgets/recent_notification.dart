@@ -51,12 +51,14 @@ class RecentNotification extends StatelessWidget {
               crossAxisAlignment: .start,
               children: [
                 Row(
+                  mainAxisAlignment: .spaceBetween,
                   children: [
-                    Text(
-                      notification?.title ?? 'No Title',
-                      style: MyTextStyle(fontSize: 16, fontWeight: .bold),
+                    Expanded(
+                      child: Text(
+                        notification?.title ?? 'No Title',
+                        style: MyTextStyle(fontSize: 16, fontWeight: .bold),
+                      ),
                     ),
-                    Spacer(),
                     Text(
                       Dateformatter.getTimeAgo(
                         notification?.timestamp ?? DateTime.now(),

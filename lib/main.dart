@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fcds_announcements/LoginFeature/login_view.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
 import 'package:fcds_announcements/ProfileFeature/profile_view.dart';
@@ -8,6 +10,7 @@ import 'package:fcds_announcements/RemindersFeature/bloc/Reminders%20Bloc/remind
 import 'package:fcds_announcements/utils/repositories/firebase_messaging_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +25,7 @@ void main() async {
   );
   await FirebaseMessagingRepository().initNotifications();
   FirebaseDatabase.instance.setPersistenceEnabled(true);
+  log("Token initialized: ${await FirebaseMessaging.instance.getToken()}");
 
   runApp(const MyApp());
 }

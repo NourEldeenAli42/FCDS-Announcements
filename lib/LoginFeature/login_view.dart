@@ -94,10 +94,18 @@ class LoginView extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: Image(
-                            image: AssetImage('assets/google_sign_in.png'),
-                            height: 50,
-                          ),
+                          child: state is GoogleLoginInProgress
+                              ? SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(),
+                                )
+                              : Image(
+                                  image: AssetImage(
+                                    'assets/google_sign_in.png',
+                                  ),
+                                  height: 50,
+                                ),
                         );
                       },
                     ),

@@ -25,6 +25,7 @@ class ProfileView extends StatelessWidget {
           mainAxisAlignment: .end,
           children: [
             FloatingActionButton(
+              heroTag: 'profile_linkedin_fab',
               backgroundColor: Colors.blue,
               onPressed: () {
                 Uri url = Uri.parse(
@@ -36,6 +37,7 @@ class ProfileView extends StatelessWidget {
             ),
             SizedBox(height: 12),
             FloatingActionButton(
+              heroTag: 'profile_whatsapp_fab',
               backgroundColor: Colors.green,
               onPressed: () {
                 Uri url = Uri.parse('https://wa.link/woouk0');
@@ -196,6 +198,9 @@ class ProfileView extends StatelessWidget {
                                       await AuthRepository().signOut();
                                       if (dialogContext.mounted) {
                                         Navigator.of(dialogContext).pop();
+                                      }
+                                      if (context.mounted) {
+                                        Navigator.of(context).pop();
                                       }
                                     },
                                     child: Text(

@@ -16,7 +16,7 @@ extension GetNotificationItemDataModelCollection on Isar {
 
 const NotificationItemDataModelSchema = CollectionSchema(
   name: r'NotificationItemDataModel',
-  id: -5043850528324844619,
+  id: -5043850528324844,
   properties: {
     r'body': PropertySchema(id: 0, name: r'body', type: IsarType.string),
     r'isRead': PropertySchema(id: 1, name: r'isRead', type: IsarType.bool),
@@ -40,7 +40,7 @@ const NotificationItemDataModelSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'messageId': IndexSchema(
-      id: -635287409172016016,
+      id: -635287409172016,
       name: r'messageId',
       unique: false,
       replace: false,
@@ -53,7 +53,7 @@ const NotificationItemDataModelSchema = CollectionSchema(
       ],
     ),
     r'timestamp': IndexSchema(
-      id: 1852253767416892198,
+      id: 1852253767416892,
       name: r'timestamp',
       unique: false,
       replace: false,

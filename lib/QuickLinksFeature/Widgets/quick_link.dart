@@ -6,7 +6,12 @@ class QuickLink extends StatelessWidget {
   final String title;
   final String url;
   final icon;
-  const QuickLink({super.key, required this.title, required this.url, required this.icon});
+  const QuickLink({
+    super.key,
+    required this.title,
+    required this.url,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +26,11 @@ class QuickLink extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              icon is IconData ? Icon(icon, size: 40, color: Colors.teal) : icon,
+              icon is IconData
+                  ? Icon(icon, size: 40, color: Colors.teal)
+                  : icon,
               SizedBox(height: 8),
-              Text(
-                title,
-                style: MyTextStyle(fontSize: 18, fontWeight: .bold),
-              ),
+              Text(title, style: MyTextStyle(fontSize: 18, fontWeight: .bold)),
             ],
           ),
         ),
