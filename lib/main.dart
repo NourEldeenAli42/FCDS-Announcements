@@ -11,6 +11,7 @@ import 'package:fcds_announcements/utils/repositories/firebase_messaging_reposit
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,9 +23,14 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseAppCheck.instance.activate(
     providerAndroid: AndroidDebugProvider(),
+    providerWeb: ReCaptchaV3Provider(
+      '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
+    ),
   );
-  await FirebaseMessagingRepository().initNotifications();
-  FirebaseDatabase.instance.setPersistenceEnabled(true);
+  // await FirebaseMessagingRepository().initNotifications();
+  if (!kIsWeb) {
+    FirebaseDatabase.instance.setPersistenceEnabled(true);
+  }
   log("Token initialized: ${await FirebaseMessaging.instance.getToken()}");
 
   runApp(const MyApp());

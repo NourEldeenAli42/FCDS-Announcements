@@ -156,7 +156,8 @@ class _MainViewState extends State<MainView> {
                 ),
               ),
               TextSpan(
-                text: FirebaseAuth.instance.currentUser?.displayName ?? 'User',
+                // text: FirebaseAuth.instance.currentUser?.displayName ?? 'User',
+                text: "Testingggg",
                 style: MyTextStyle(
                   color: Color(0xFF111815),
                   fontSize: 18,

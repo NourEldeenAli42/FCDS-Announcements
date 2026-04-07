@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -66,6 +57,37 @@ class DefaultFirebaseOptions {
     androidClientId: '921251262968-0fs6mdptsfgfudqo73mleq7qa7pma682.apps.googleusercontent.com',
     iosClientId: '921251262968-q1r3pql47o1gstej8ea4mepoem3o3edv.apps.googleusercontent.com',
     iosBundleId: 'com.TeamMaterials.fcdsAnnouncements',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCB-Cd4Dubr45LdHHUXcv6YJaqguzcPzmM',
+    appId: '1:921251262968:web:3b75eea685fb65e26ce60d',
+    messagingSenderId: '921251262968',
+    projectId: 'fcds-announcements-7dbbd',
+    authDomain: 'fcds-announcements-7dbbd.firebaseapp.com',
+    storageBucket: 'fcds-announcements-7dbbd.firebasestorage.app',
+    measurementId: 'G-DQG9336S8K',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyD5Q16atln1kIi3w81pVATpJQnbV5PcU-w',
+    appId: '1:921251262968:ios:b6b3ae8b9d4a4e816ce60d',
+    messagingSenderId: '921251262968',
+    projectId: 'fcds-announcements-7dbbd',
+    storageBucket: 'fcds-announcements-7dbbd.firebasestorage.app',
+    androidClientId: '921251262968-0fs6mdptsfgfudqo73mleq7qa7pma682.apps.googleusercontent.com',
+    iosClientId: '921251262968-q1r3pql47o1gstej8ea4mepoem3o3edv.apps.googleusercontent.com',
+    iosBundleId: 'com.TeamMaterials.fcdsAnnouncements',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyCB-Cd4Dubr45LdHHUXcv6YJaqguzcPzmM',
+    appId: '1:921251262968:web:8c9ef54523ef9bb76ce60d',
+    messagingSenderId: '921251262968',
+    projectId: 'fcds-announcements-7dbbd',
+    authDomain: 'fcds-announcements-7dbbd.firebaseapp.com',
+    storageBucket: 'fcds-announcements-7dbbd.firebasestorage.app',
+    measurementId: 'G-YWJLXQKN51',
   );
 
 }
