@@ -148,7 +148,7 @@ class _MainViewState extends State<MainView> {
                 style: MyTextStyle(fontSize: 14, color: Color(0xFF608579)),
               ),
               TextSpan(
-                text: 'Good Morning, \n',
+                text: 'Good Evening, \n',
                 style: MyTextStyle(
                   color: Color(0xFF111815),
                   fontSize: 20,
