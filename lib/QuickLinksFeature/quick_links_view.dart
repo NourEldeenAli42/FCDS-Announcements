@@ -23,7 +23,7 @@ class QuickLinksView extends StatelessWidget {
             QuickLink(
               title: 'Chameleon',
               url:
-                  'https://www.chameleon-nu.tech/specialization/computing-data-sciences',
+                  'https://chameleon-nu.vercel.app/specialization/computing-data-sciences',
               icon: Image.asset('assets/chameleon.webp', width: 40, height: 40),
             ),
           ],

@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 class QuickLink extends StatelessWidget {
   final String title;
   final String url;
+  // ignore: strict_top_level_inference, prefer_typing_uninitialized_variables
   final icon;
   const QuickLink({
     super.key,
