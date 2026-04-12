@@ -23,7 +23,7 @@ class ProfileView extends StatelessWidget {
   Future<String> getAppInfo() async {
     final packageInfo = await PackageInfo.fromPlatform();
     final patch = await ShorebirdUpdater().readCurrentPatch();
-    return 'Version: ${packageInfo.version}($patch)\n\n';
+    return 'Version: ${packageInfo.version}(${patch?.number})\n\n';
   }
 
   @override
@@ -99,10 +99,14 @@ class ProfileView extends StatelessWidget {
                       SnackBar(content: Text('App is already up to date!')),
                     );
                   }
-                } else {
+                } else if (status == UpdateStatus.restartRequired) {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed to check for updates.')),
+                      SnackBar(
+                        content: Text(
+                          'Please restart the app to apply the latest updates.',
+                        ),
+                      ),
                     );
                   }
                 }

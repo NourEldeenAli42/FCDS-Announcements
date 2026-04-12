@@ -1,4 +1,43 @@
 final class Dateformatter {
+  static String formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    final totalMinutes = duration.inMinutes;
+    final totalHours = duration.inHours;
+    final totalDays = duration.inDays;
+
+    if (totalMinutes <= 0) {
+      return "NOW";
+    }
+
+    final weeks = totalDays ~/ 7;
+    final days = totalDays % 7;
+    final hours = totalHours % 24;
+    final minutes = totalMinutes % 60;
+
+    if (weeks > 0) {
+      if (days > 0) {
+        return "$weeks weeks $days days";
+      }
+      return "$weeks weeks";
+    }
+
+    if (totalDays > 0) {
+      if (hours > 0) {
+        return "$totalDays days $hours hours";
+      }
+      return "$totalDays days";
+    }
+
+    if (totalHours > 0) {
+      if (minutes > 0) {
+        return "$totalHours hours ${twoDigits(minutes)} minutes";
+      }
+      return "$totalHours hours";
+    }
+
+    return "$totalMinutes minutes";
+  }
+
   static String getWeekdayName(int weekday) {
     switch (weekday) {
       case 1:
