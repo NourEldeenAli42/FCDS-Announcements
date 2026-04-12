@@ -1,16 +1,32 @@
-# fcds_announcements
+# 📢 FCDS Announcements
+Welcome to FCDS Announcements!
+Your college companion — instead of many WhatsApp groups, all pages are now in one place. Instead of endless unnecessary messages, receive only the important announcements sent from Team Materials.
+We’re fully responsible for:
+- Sending notifications
+- Posting announcements
+- Managing any errors that may happen
+- You can also schedule reminders sent as notifications at any time to track deadlines.
+- 👨‍💻 Lead Developer: Nour "Eldeen" Ali
 
-A new Flutter project.
+# ⬇️ How to Downlaod
+- Go to Releases Section in this github repository, and download the latest release apk
+- Or directly from this [Link](https://github.com/NourEldeenAli42/FCDS-Announcements/releases/download/Release/FCDS_Announcements.apk)
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+# 🚀 Features
+- Centralized announcements hub
+- Real-time notifications
+- Individual pages feed and follow functionality
+- Reminder scheduling for deadlines
+- Clean, responsive design
 
-A few resources to get you started if this is your first Flutter project:
+# 🔙 Feedback
+We'd be glad to have you affect the application in the future releases.
+So if you have any suggestions, bug reports, or any other feedback you want to give us, please submit this [Form](https://docs.google.com/forms/d/e/1FAIpQLSelJIqB7YYE8zmNfe6daG0zsnpjINzo8-ea1mBCV3at1rjiMA/viewform?usp=header), we'll totally be happy to hear from you !
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+# 📜 License
+This project is licensed under the MIT License.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Contact
+- +20 1124016130
+- noureldeenali42@gmail.com
