@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:fcds_announcements/LoginFeature/login_view.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
+import 'package:fcds_announcements/PageFeedFeature/page_feed_view.dart';
 import 'package:fcds_announcements/ProfileFeature/profile_view.dart';
 import 'package:fcds_announcements/RecentMessagesFeature/messages_view.dart';
 import 'package:fcds_announcements/RemindersFeature/bloc/Events%20Bloc/events_bloc.dart';
@@ -16,7 +17,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:fcds_announcements/utils/repositories/firebase_messaging_repository.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -26,7 +29,7 @@ void main() async {
       '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
     ),
   );
-  // await FirebaseMessagingRepository().initNotifications();
+  await FirebaseMessagingRepository().initNotifications();
   if (!kIsWeb) {
     FirebaseDatabase.instance.setPersistenceEnabled(true);
   }
@@ -42,10 +45,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       routes: {
         '/home': (context) => HomeView(),
         '/messages': (context) => MessagesView(),
         '/profile': (context) => ProfileView(),
+        '/feed': (context) => PageFeedView(),
       },
       title: 'FCDS Announcements',
       theme: ThemeData(

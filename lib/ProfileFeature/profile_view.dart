@@ -8,14 +8,24 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shorebird_code_push/shorebird_code_push.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileView extends StatelessWidget {
   ProfileView({super.key});
+  final bool isUpdaterAvailable = ShorebirdUpdater().isAvailable;
 
   final nameController = TextEditingController(
     text: FirebaseAuth.instance.currentUser?.displayName ?? '',
   );
+
+  Future<String> getAppInfo() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    final patch = await ShorebirdUpdater().readCurrentPatch();
+    return 'Version: ${packageInfo.version}($patch)\n\n';
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -44,6 +54,60 @@ class ProfileView extends StatelessWidget {
                 launchUrl(url, mode: LaunchMode.externalApplication);
               },
               child: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white),
+            ),
+            SizedBox(height: 12),
+            FloatingActionButton(
+              heroTag: 'profile_update_fab',
+              backgroundColor: Color.fromARGB(255, 54, 125, 101),
+              onPressed: () async {
+                final updater = ShorebirdUpdater();
+                final status = await updater.checkForUpdate();
+                if (status == UpdateStatus.outdated) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Update available, downloading...'),
+                      ),
+                    );
+                  }
+                  await updater.update();
+
+                  if (context.mounted) {
+                    showAdaptiveDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('Update Downloaded'),
+                          content: Text(
+                            'The update has been downloaded. Please restart the app to apply the latest updates.',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                } else if (status == UpdateStatus.upToDate) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('App is already up to date!')),
+                    );
+                  }
+                } else {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Failed to check for updates.')),
+                    );
+                  }
+                }
+              },
+              child: Icon(Icons.update, color: Colors.white),
             ),
           ],
         ),
@@ -216,43 +280,71 @@ class ProfileView extends StatelessWidget {
                         child: Text('Logout'),
                       ),
                       SizedBox(height: 16),
+                      FutureBuilder(
+                        future: getAppInfo(),
+                        builder: (context, asyncSnapshot) {
+                          return Text.rich(
+                            textAlign: .center,
+                            TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: 'FCDS Announcements App\n\n',
+                                  style: MyTextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: asyncSnapshot.data,
+                                  style: MyTextStyle(),
+                                ),
+                                TextSpan(
+                                  text: 'Developed by',
+                                  style: MyTextStyle(),
+                                ),
+                                TextSpan(
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Uri url = Uri.parse(
+                                        'https://www.linkedin.com/in/noureldeenali',
+                                      );
+                                      launchUrl(
+                                        url,
+                                        mode: LaunchMode.externalApplication,
+                                      );
+                                    },
+                                  text: ' Nour "Eldeen" Ali',
+                                  style: MyTextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 54, 125, 101),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(height: 16),
                       Text.rich(
-                        textAlign: .center,
                         TextSpan(
                           children: [
                             TextSpan(
-                              text: 'FCDS Announcements App\n',
-                              style: MyTextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(
-                              text: 'Version 1.0.0\n',
+                              text: 'Updater Statues: ',
                               style: MyTextStyle(),
                             ),
                             TextSpan(
-                              text: 'Developed by',
-                              style: MyTextStyle(),
-                            ),
-                            TextSpan(
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  Uri url = Uri.parse(
-                                    'https://www.linkedin.com/in/noureldeenali',
-                                  );
-                                  launchUrl(
-                                    url,
-                                    mode: LaunchMode.externalApplication,
-                                  );
-                                },
-                              text: ' Nour "Eldeen" Ali',
+                              text: isUpdaterAvailable
+                                  ? 'Available'
+                                  : 'Unavailable',
                               style: MyTextStyle(
+                                color: isUpdaterAvailable
+                                    ? Colors.green
+                                    : Colors.red,
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 54, 125, 101),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      SizedBox(height: 16),
                     ],
                   ),
                 ),

@@ -8,19 +8,50 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timelines_plus/timelines_plus.dart';
 
 class PageFeedView extends StatelessWidget {
-  final CourseDataModel subject;
-  final PageDataModel page;
-  const PageFeedView({super.key, required this.subject, required this.page});
+  final CourseDataModel? subject;
+  final PageDataModel? page;
+  const PageFeedView({super.key, this.subject, this.page});
+
+  (CourseDataModel?, PageDataModel?) _resolveArgs(BuildContext context) {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is! Map<String, dynamic>) {
+      return (subject, page);
+    }
+
+    final argSubject = args['subject'] ?? args['cdm'];
+    final argPage = args['page'] ?? args['pdm'];
+
+    return (
+      argSubject is CourseDataModel ? argSubject : subject,
+      argPage is PageDataModel ? argPage : page,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final (resolvedSubject, resolvedPage) = _resolveArgs(context);
+    if (resolvedSubject == null || resolvedPage == null) {
+      return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(Icons.arrow_back_ios_new),
+            color: Color.fromARGB(255, 34, 125, 109),
+          ),
+        ),
+        body: Center(
+          child: Text('Missing page data', style: MyTextStyle(fontSize: 16)),
+        ),
+      );
+    }
+
     return BlocProvider(
       create: (context) =>
-          FeedBloc()..add(LoadAnnouncementsEvent(pageId: page.id)),
+          FeedBloc()..add(LoadAnnouncementsEvent(pageId: resolvedPage.id)),
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            "${subject.name} ${page.title}",
+            "${resolvedSubject.name} ${resolvedPage.title}",
             style: MyTextStyle(fontSize: 20, fontWeight: .bold),
           ),
           centerTitle: true,

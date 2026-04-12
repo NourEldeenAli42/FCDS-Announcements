@@ -1,6 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:fcds_announcements/FollowPageFeature/Data%20Models/course_data_model.dart';
+import 'package:fcds_announcements/FollowPageFeature/Data%20Models/page_data_model.dart';
 import 'package:fcds_announcements/RecentMessagesFeature/repositories/notification_reciever_repository.dart';
+import 'package:fcds_announcements/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -21,6 +25,7 @@ void _onDidReceiveBackgroundNotificationResponse(
   if (payload == null || payload.isEmpty) {
     return;
   }
+  log('Background notification tapped with payload: $payload');
 
   final uri = Uri.tryParse(payload);
   if (uri != null) {
@@ -45,14 +50,29 @@ class FirebaseMessagingRepository {
 
   final _firebaseMessaging = FirebaseMessaging.instance;
 
-  Future<void> _handleTapUrl(String? url) async {
-    if (url == null || url.isEmpty) {
+  Future<void> _handleTapUrl(String? payload) async {
+    if (payload == null || payload.isEmpty) {
+      return;
+    }
+    final data = jsonDecode(payload);
+
+    if (data['type'] == null) {
       return;
     }
 
-    final uri = Uri.tryParse(url);
-    if (uri != null) {
-      await launchUrl(uri);
+    if (data['type'] == 'page_feed') {
+      log('Navigating to page feed with data: $data');
+
+      navigatorKey.currentState?.pushNamed(
+        '/messages',
+        arguments: {
+          'cdm': CourseDataModel(
+            id: data['course_id'],
+            name: data['course_name'],
+          ),
+          'pdm': PageDataModel(id: data['page_id'], title: data['page_type']),
+        },
+      );
     }
   }
 
@@ -80,6 +100,12 @@ class FirebaseMessagingRepository {
       onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
       onDidReceiveBackgroundNotificationResponse:
           _onDidReceiveBackgroundNotificationResponse,
+    );
+
+    await _firebaseMessaging.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
     );
 
     await flutterLocalNotificationsPlugin
