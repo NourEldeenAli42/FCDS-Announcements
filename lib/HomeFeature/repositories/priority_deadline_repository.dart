@@ -17,14 +17,13 @@ class PriorityDeadlineRepository {
 
   PriorityDeadlineRepository({FirebaseFirestore? firestore})
     : _firestore = firestore ?? FirebaseFirestore.instance;
-
-  Future<PriorityDeadlineDataModel?> getPriorityDeadline(
+  final List<PriorityDeadlineDataModel> allDeadlines = [];
+  Future<List<PriorityDeadlineDataModel>> getPriorityDeadline(
     List<String> followedPageIds,
   ) async {
-    if (followedPageIds.isEmpty) return null;
+    if (followedPageIds.isEmpty) return [];
 
     final uniquePageIds = followedPageIds.toSet().toList();
-    QueryDocumentSnapshot<Map<String, dynamic>>? bestDoc;
 
     for (final pageChunk in _chunkList(
       uniquePageIds,
@@ -36,50 +35,19 @@ class PriorityDeadlineRepository {
           .orderBy('deadline', descending: false)
           .orderBy('post_time', descending: true)
           .where('deadline', isGreaterThan: Timestamp.now())
-          .limit(1)
           .get();
 
       if (query.docs.isEmpty) {
         continue;
       }
 
-      final candidate = query.docs.first;
-      if (bestDoc == null) {
-        bestDoc = candidate;
-        continue;
+      for (final candidate in query.docs) {
+        allDeadlines.add(
+          PriorityDeadlineDataModel.fromFirestore(candidate.data()),
+        );
       }
-
-      final candidateDeadline = candidate.data()['deadline'] as Timestamp;
-      final bestDeadline = bestDoc.data()['deadline'] as Timestamp;
-
-      final isEarlierDeadline = candidateDeadline.toDate().isBefore(
-        bestDeadline.toDate(),
-      );
-      final isSameDeadline = candidateDeadline.toDate().isAtSameMomentAs(
-        bestDeadline.toDate(),
-      );
-
-      if (isEarlierDeadline) {
-        bestDoc = candidate;
-        continue;
-      }
-
-      if (isSameDeadline) {
-        final candidatePostTime = candidate.data()['post_time'] as Timestamp;
-        final bestPostTime = bestDoc.data()['post_time'] as Timestamp;
-        if (candidatePostTime.toDate().isAfter(bestPostTime.toDate())) {
-          bestDoc = candidate;
-        }
-      }
+      return allDeadlines;
     }
-
-    if (bestDoc == null) {
-      return null;
-    }
-
-    final announcement = PriorityDeadlineDataModel.fromFirestore(
-      bestDoc.data(),
-    );
-    return announcement;
+    return allDeadlines;
   }
 }

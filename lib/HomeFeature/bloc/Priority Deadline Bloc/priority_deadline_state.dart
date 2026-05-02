@@ -12,6 +12,6 @@ final class PriorityDeadlineInitial extends PriorityDeadlineState {}
 class PriorityDeadlineLoading extends PriorityDeadlineState {}
 
 class PriorityDeadlineLoaded extends PriorityDeadlineState {
-  final PriorityDeadlineDataModel? priorityDeadline;
+  final List<PriorityDeadlineDataModel> priorityDeadline;
   const PriorityDeadlineLoaded(this.priorityDeadline);
 }

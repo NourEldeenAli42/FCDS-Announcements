@@ -1,5 +1,5 @@
+import 'package:fcds_announcements/HomeFeature/Widgets/deadlines_carousel.dart';
 import 'package:fcds_announcements/HomeFeature/Widgets/function_card.dart';
-import 'package:fcds_announcements/HomeFeature/Widgets/priority_deadline.dart';
 import 'package:fcds_announcements/HomeFeature/Widgets/urgent_announcement.dart';
 import 'package:fcds_announcements/HomeFeature/bloc/Announcement%20Bloc/announcement_bloc.dart';
 import 'package:fcds_announcements/HomeFeature/bloc/Function%20Buttons%20Bloc/function_buttons_bloc.dart';
@@ -116,13 +116,10 @@ class HomeView extends StatelessWidget {
                               );
                             } else if (state is PriorityDeadlineLoaded) {
                               final priorityDeadline = state.priorityDeadline;
-                              if (priorityDeadline != null) {
-                                return Container(
-                                  margin: .only(bottom: 20),
-                                  child: PriorityDeadlineCard(
-                                    title: priorityDeadline.title,
-                                    timeLeft: priorityDeadline.remainingTime,
-                                  ),
+
+                              if (priorityDeadline.isNotEmpty) {
+                                return DeadlinesCarousel(
+                                  priorityDeadlines: priorityDeadline,
                                 );
                               } else {
                                 return SizedBox.shrink();
@@ -134,7 +131,10 @@ class HomeView extends StatelessWidget {
                         SizedBox(height: 20),
                         Column(
                           children: [
-                            BlocBuilder<FunctionButtonsBloc, FunctionButtonsState>(
+                            BlocBuilder<
+                              FunctionButtonsBloc,
+                              FunctionButtonsState
+                            >(
                               builder: (context, state) {
                                 if (state is FunctionButtonsReadLoaded) {
                                   return FunctionCard(

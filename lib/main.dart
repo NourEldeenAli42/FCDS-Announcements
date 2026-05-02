@@ -8,6 +8,7 @@ import 'package:fcds_announcements/RecentMessagesFeature/messages_view.dart';
 import 'package:fcds_announcements/RemindersFeature/bloc/Events%20Bloc/events_bloc.dart';
 import 'package:fcds_announcements/main_view.dart';
 import 'package:fcds_announcements/RemindersFeature/bloc/Reminders%20Bloc/reminders_bloc.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -34,7 +35,8 @@ void main() async {
     FirebaseDatabase.instance.setPersistenceEnabled(true);
   }
   log("Token initialized: ${await FirebaseMessaging.instance.getToken()}");
-
+  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  analytics.logAppOpen();
   runApp(const MyApp());
 }
 

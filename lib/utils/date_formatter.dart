@@ -129,4 +129,15 @@ final class Dateformatter {
     }
     return timeAgo;
   }
+  static String getDayTime(DateTime now) {
+    if (now.hour >= 5 && now.hour < 12) {
+      return 'Morning';
+    } else if (now.hour >= 12 && now.hour < 17) {
+      return 'Afternoon';
+    } else if (now.hour >= 17 && now.hour < 21) {
+      return 'Evening';
+    } else {
+      return 'Night';
+    }
+  }
 }
