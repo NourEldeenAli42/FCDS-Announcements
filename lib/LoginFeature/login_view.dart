@@ -76,14 +76,23 @@ class LoginView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    BlocBuilder<GoogleLoginBloc, GoogleLoginState>(
+                    BlocConsumer<GoogleLoginBloc, GoogleLoginState>(
+                      listener: (context, state) {
+                        if (state is GoogleLoginFailure) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(state.errorMessage)),
+                          );
+                        }
+                      },
                       builder: (context, state) {
                         return ElevatedButton(
-                          onPressed: () {
-                            context.read<GoogleLoginBloc>().add(
-                              GoogleLoginRequested(),
-                            );
-                          },
+                          onPressed: state is GoogleLoginInProgress
+                              ? null
+                              : () {
+                                  context.read<GoogleLoginBloc>().add(
+                                    GoogleLoginRequested(),
+                                  );
+                                },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF367D65),
                             padding: const EdgeInsets.symmetric(
@@ -112,6 +121,7 @@ class LoginView extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(height: 20),
               Text.rich(
                 TextSpan(
                   text: 'By signing in, you agree to our ',

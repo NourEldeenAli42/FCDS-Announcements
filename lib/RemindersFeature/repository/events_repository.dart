@@ -17,8 +17,7 @@ class EventsRepository {
   final db = FirebaseFirestore.instance;
   Future<List<AnnouncementDataModel>> fetchEvents() async {
     try {
-      UserRepository userRepo = UserRepository();
-      final followedPages = await userRepo.getFollowedPageIds();
+      final followedPages = await UserRepository.getFollowedPageIds();
       if (followedPages.isEmpty) {
         return [];
       }

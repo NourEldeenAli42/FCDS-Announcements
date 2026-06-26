@@ -6,6 +6,7 @@ import 'package:fcds_announcements/FollowPageFeature/Data%20Models/page_data_mod
 import 'package:fcds_announcements/RecentMessagesFeature/repositories/notification_reciever_repository.dart';
 import 'package:fcds_announcements/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -69,8 +70,22 @@ class FirebaseMessagingRepository {
           'cdm': CourseDataModel(
             id: data['course_id'],
             name: data['course_name'],
+            description: data['description'],
           ),
-          'pdm': PageDataModel(id: data['page_id'], title: data['page_type']),
+          'pdm': PageDataModel(
+            id: data['page_id'],
+            title: data['page_type'],
+            hall: data['hall'],
+            instructor: data['instructor'],
+            startTime: TimeOfDay(
+              hour: data['start_time'] != null
+                  ? int.parse(data['start_time'].split(':')[0])
+                  : 0,
+              minute: data['start_time'] != null
+                  ? int.parse(data['start_time'].split(':')[1])
+                  : 0,
+            ),
+          ),
         },
       );
     }

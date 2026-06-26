@@ -6,16 +6,18 @@ sealed class FeedEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
 class LoadAnnouncementsEvent extends FeedEvent {
-  final String pageId;
+  final int pageId;
 
   const LoadAnnouncementsEvent({required this.pageId});
 
   @override
   List<Object> get props => [pageId];
 }
+
 class RefreshAnnouncementsEvent extends FeedEvent {
-  final String pageId;
+  final int pageId;
 
   const RefreshAnnouncementsEvent({required this.pageId});
 

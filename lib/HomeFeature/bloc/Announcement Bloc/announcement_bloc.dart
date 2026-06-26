@@ -10,21 +10,21 @@ part 'announcement_state.dart';
 class AnnouncementBloc extends Bloc<AnnouncementEvent, AnnouncementState> {
   final UrgentAnnouncementRepository _repository =
       UrgentAnnouncementRepository();
-  final _userRepository = UserRepository();
+
   AnnouncementBloc() : super(AnnouncementInitial()) {
     on<AnnouncementEvent>((event, emit) async {
       if (event is LoadAnnouncementEvent) {
         emit(AnnouncementLoading());
 
         final announcement = await _repository.getUrgentAnnouncement(
-          await _userRepository.getFollowedPageIds(),
+          await UserRepository.getFollowedPageIds(),
         );
         emit(AnnouncementLoaded(announcement));
       } else if (event is RefreshAnnouncementEvent) {
         emit(AnnouncementLoading());
 
         final announcement = await _repository.getUrgentAnnouncement(
-          await _userRepository.getFollowedPageIds(),
+          await UserRepository.getFollowedPageIds(),
         );
         emit(AnnouncementLoaded(announcement));
       }

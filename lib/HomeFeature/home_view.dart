@@ -39,6 +39,9 @@ class HomeView extends StatelessWidget {
                       context.read<PriorityDeadlineBloc>().add(
                         RefreshPriorityDeadlineEvent(),
                       );
+                      context.read<FunctionButtonsBloc>().add(
+                        LoadReadFunctionButtonsEvent(),
+                      );
                     },
                     child: ListView(
                       padding: .all(9),
@@ -175,6 +178,23 @@ class HomeView extends StatelessWidget {
                                 );
                               },
                             );
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        BlocBuilder<FunctionButtonsBloc, FunctionButtonsState>(
+                          builder: (context, state) {
+                            if (state is FunctionButtonsReadLoaded &&
+                                state.isAdmin) {
+                              return FunctionCard(
+                                hasUnread: false,
+                                icon: Icons.admin_panel_settings,
+                                label: 'Admin Panel',
+                                color: Colors.red,
+                                onTap: () {},
+                              );
+                            } else {
+                              return SizedBox.shrink();
+                            }
                           },
                         ),
                       ],

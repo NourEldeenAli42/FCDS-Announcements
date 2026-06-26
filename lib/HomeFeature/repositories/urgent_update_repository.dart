@@ -19,7 +19,7 @@ class UrgentAnnouncementRepository {
     : _firestore = firestore ?? FirebaseFirestore.instance;
 
   Future<UrgentUpdateDataModel?> getUrgentAnnouncement(
-    List<String> followedPageIds,
+    List<int> followedPageIds,
   ) async {
     if (followedPageIds.isEmpty) return null;
 
@@ -59,7 +59,7 @@ class UrgentAnnouncementRepository {
       return null;
     }
 
-    final announcement = UrgentUpdateDataModel.fromFirestore(latestDoc.data());
+    final announcement = UrgentUpdateDataModel.fromDocument(latestDoc.data());
     return announcement;
   }
 }

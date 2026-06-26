@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:fcds_announcements/HomeFeature/repositories/read_check_repository.dart';
+import 'package:fcds_announcements/utils/repositories/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'function_buttons_event.dart';
@@ -12,10 +13,11 @@ class FunctionButtonsBloc
       ReadCheckRepository readCheckRepository = ReadCheckRepository();
       if (event is LoadReadFunctionButtonsEvent) {
         emit(FunctionButtonsReadLoading());
+        final bool isAdmin = await UserRepository.isUserAdmin();
         await emit.forEach<bool>(
           readCheckRepository.hasUnreadMessages(),
           onData: (hasUnreadMessages) =>
-              FunctionButtonsReadLoaded(hasUnreadMessages: hasUnreadMessages),
+              FunctionButtonsReadLoaded(hasUnreadMessages: hasUnreadMessages, isAdmin: isAdmin),
         );
       }
     });

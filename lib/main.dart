@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:fcds_announcements/LoginFeature/login_view.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
 import 'package:fcds_announcements/PageFeedFeature/page_feed_view.dart';
@@ -8,14 +6,15 @@ import 'package:fcds_announcements/RecentMessagesFeature/messages_view.dart';
 import 'package:fcds_announcements/RemindersFeature/bloc/Events%20Bloc/events_bloc.dart';
 import 'package:fcds_announcements/main_view.dart';
 import 'package:fcds_announcements/RemindersFeature/bloc/Reminders%20Bloc/reminders_bloc.dart';
+import 'package:fcds_announcements/utils/AI%20Model/core_model.dart';
+import 'package:fcds_announcements/utils/supabase.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 import 'firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:fcds_announcements/utils/repositories/firebase_messaging_repository.dart';
@@ -23,6 +22,7 @@ import 'package:fcds_announcements/utils/repositories/firebase_messaging_reposit
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initSupabase();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseAppCheck.instance.activate(
     providerAndroid: AndroidDebugProvider(),
@@ -34,9 +34,10 @@ void main() async {
   if (!kIsWeb) {
     FirebaseDatabase.instance.setPersistenceEnabled(true);
   }
-  log("Token initialized: ${await FirebaseMessaging.instance.getToken()}");
+
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   analytics.logAppOpen();
+  AIModel.initialize();
   runApp(const MyApp());
 }
 
@@ -68,30 +69,22 @@ class AuthWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // StreamBuilder listens to the Firebase Auth state
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
+    return StreamBuilder<AuthState?>(
+      stream: Supabase.instance.client.auth.onAuthStateChange,
       builder: (context, snapshot) {
-        // 1. Check if the connection is still loading
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
+        final session = snapshot.data?.session;
+
+        if (session == null) {
+          return const LoginView();
         }
 
-        // 2. If the snapshot has user data, they are logged in
-        if (snapshot.hasData) {
-          return BlocProvider(
-            create: (context) => RemindersBloc(),
-            child: BlocProvider(
-              create: (context) => EventsBloc(),
-              child: MainView(),
-            ),
-          );
-        }
-
-        // 3. Otherwise, show the login screen
-        return const LoginView();
+        return BlocProvider(
+          create: (context) => RemindersBloc(),
+          child: BlocProvider(
+            create: (context) => EventsBloc(),
+            child: MainView(),
+          ),
+        );
       },
     );
   }

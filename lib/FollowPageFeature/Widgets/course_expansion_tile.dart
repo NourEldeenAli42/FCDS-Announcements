@@ -7,8 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CourseExpansionTile extends StatefulWidget {
-  final CourseDataModel page;
-  const CourseExpansionTile({super.key, required this.page});
+  final CourseDataModel course;
+  const CourseExpansionTile({super.key, required this.course});
 
   @override
   State<CourseExpansionTile> createState() => _CourseExpansionTileState();
@@ -23,14 +23,14 @@ class _CourseExpansionTileState extends State<CourseExpansionTile> {
   void initState() {
     super.initState();
     _searchPagesBloc = PagesBloc();
-    _followCubit = FollowPageCubit(widget.page.id);
+    _followCubit = FollowPageCubit();
   }
 
   @override
   void didUpdateWidget(CourseExpansionTile oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Reset expansion state when the page changes (e.g., when search results change)
-    if (oldWidget.page.id != widget.page.id) {
+    if (oldWidget.course.id != widget.course.id) {
       setState(() {
         _isExpanded = false;
       });
@@ -38,7 +38,7 @@ class _CourseExpansionTileState extends State<CourseExpansionTile> {
       _searchPagesBloc.close();
       _searchPagesBloc = PagesBloc();
       _followCubit.close();
-      _followCubit = FollowPageCubit(widget.page.id);
+      _followCubit = FollowPageCubit();
     }
   }
 
@@ -66,7 +66,7 @@ class _CourseExpansionTileState extends State<CourseExpansionTile> {
                 });
                 if (value) {
                   context.read<PagesBloc>().add(
-                    FetchPagesEvent(widget.page.name),
+                    FetchPagesEvent(widget.course.id),
                   );
                 }
               },
@@ -83,7 +83,7 @@ class _CourseExpansionTileState extends State<CourseExpansionTile> {
                   SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      widget.page.name.trim(),
+                      widget.course.name.trim(),
                       style: MyTextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -93,6 +93,10 @@ class _CourseExpansionTileState extends State<CourseExpansionTile> {
                 ],
               ),
               children: [
+                Text(
+                  widget.course.description.trim(),
+                  style: MyTextStyle(fontSize: 14, color: Colors.grey[600]),
+                ),
                 if (state is SearchPagesLoading)
                   Center(
                     child: Column(
@@ -128,7 +132,7 @@ class _CourseExpansionTileState extends State<CourseExpansionTile> {
                 else if (state is SearchPagesLoaded && state.pages.isNotEmpty)
                   ...state.pages.map(
                     (p) => BlocProvider(
-                      create: (context) => FollowPageCubit(p.id),
+                      create: (context) => FollowPageCubit(pageID: p.id),
                       child: ListTile(
                         trailing: BlocBuilder<FollowPageCubit, FollowPageState>(
                           builder: (context, state) {
@@ -181,7 +185,11 @@ class _CourseExpansionTileState extends State<CourseExpansionTile> {
                         ),
                         subtitle: Wrap(
                           children: [
-                            for (var tag in p.tags)
+                            for (var tag in [
+                              p.instructor,
+                              p.startTime.format(context),
+                              p.hall,
+                            ])
                               Container(
                                 margin: EdgeInsets.only(right: 6, top: 4),
                                 padding: EdgeInsets.symmetric(

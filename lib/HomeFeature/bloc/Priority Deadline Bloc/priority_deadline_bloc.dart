@@ -11,18 +11,17 @@ class PriorityDeadlineBloc
     extends Bloc<PriorityDeadlineEvent, PriorityDeadlineState> {
   PriorityDeadlineRepository priorityDeadlineRepository =
       PriorityDeadlineRepository();
-  UserRepository userRepository = UserRepository();
   PriorityDeadlineBloc() : super(PriorityDeadlineInitial()) {
     on<PriorityDeadlineEvent>((event, emit) async {
       if (event is LoadPriorityDeadlineEvent) {
         emit(PriorityDeadlineLoading());
-        final followedPageIds = await userRepository.getFollowedPageIds();
+        final followedPageIds = await UserRepository.getFollowedPageIds();
         final priorityDeadline = await priorityDeadlineRepository
             .getPriorityDeadline(followedPageIds);
         emit(PriorityDeadlineLoaded(priorityDeadline));
       } else if (event is RefreshPriorityDeadlineEvent) {
         emit(PriorityDeadlineLoading());
-        final followedPageIds = await userRepository.getFollowedPageIds();
+        final followedPageIds = await UserRepository.getFollowedPageIds();
         final priorityDeadline = await priorityDeadlineRepository
             .getPriorityDeadline(followedPageIds);
         emit(PriorityDeadlineLoaded(priorityDeadline));

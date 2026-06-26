@@ -40,7 +40,7 @@ const NotificationItemDataModelSchema = CollectionSchema(
   idName: r'id',
   indexes: {
     r'messageId': IndexSchema(
-      id: -635287409172016,
+      id: -635287409172016016,
       name: r'messageId',
       unique: false,
       replace: false,
@@ -53,7 +53,7 @@ const NotificationItemDataModelSchema = CollectionSchema(
       ],
     ),
     r'timestamp': IndexSchema(
-      id: 1852253767416892,
+      id: 1852253767416892198,
       name: r'timestamp',
       unique: false,
       replace: false,
@@ -72,7 +72,7 @@ const NotificationItemDataModelSchema = CollectionSchema(
   getId: _notificationItemDataModelGetId,
   getLinks: _notificationItemDataModelGetLinks,
   attach: _notificationItemDataModelAttach,
-  version: '3.3.0',
+  version: '3.3.2',
 );
 
 int _notificationItemDataModelEstimateSize(

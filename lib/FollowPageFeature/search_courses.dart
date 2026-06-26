@@ -82,7 +82,7 @@ class SearchCourses extends SearchDelegate {
               itemCount: filteredResults.length,
               itemBuilder: (context, index) {
                 final page = filteredResults[index];
-                return CourseExpansionTile(page: page);
+                return CourseExpansionTile(course: page);
               },
             );
           } else if (state is SearchCoursesError) {
@@ -146,7 +146,7 @@ class SearchCourses extends SearchDelegate {
               itemCount: filteredResults.length,
               itemBuilder: (context, index) {
                 final page = filteredResults[index];
-                return CourseExpansionTile(page: page);
+                return CourseExpansionTile(course: page);
               },
             );
           } else if (state is SearchCoursesError) {

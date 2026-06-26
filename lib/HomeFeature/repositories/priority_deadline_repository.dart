@@ -19,7 +19,7 @@ class PriorityDeadlineRepository {
     : _firestore = firestore ?? FirebaseFirestore.instance;
   final List<PriorityDeadlineDataModel> allDeadlines = [];
   Future<List<PriorityDeadlineDataModel>> getPriorityDeadline(
-    List<String> followedPageIds,
+    List<int> followedPageIds,
   ) async {
     if (followedPageIds.isEmpty) return [];
 

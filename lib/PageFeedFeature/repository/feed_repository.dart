@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcds_announcements/PageFeedFeature/Data%20Models/announcement_data_model.dart';
 
 class FeedRepository {
-  Future<List<AnnouncementDataModel>> fetchAnnouncements(String pageId) async {
+  Future<List<AnnouncementDataModel>> fetchAnnouncements(int pageId) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     QuerySnapshot snapshot = await db
         .collection('announcements')

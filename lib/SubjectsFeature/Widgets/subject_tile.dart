@@ -82,7 +82,11 @@ class SubjectTile extends StatelessWidget {
                                   (page) => ListTile(
                                     subtitle: Wrap(
                                       children: [
-                                        for (var tag in page.tags)
+                                        for (var tag in [
+                                          page.hall,
+                                          page.instructor,
+                                          page.startTime.format(context),
+                                        ])
                                           Container(
                                             margin: EdgeInsets.only(
                                               right: 6,
