@@ -1,49 +1,24 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcds_announcements/PageFeedFeature/Data%20Models/announcement_data_model.dart';
 import 'package:fcds_announcements/utils/repositories/user_repository.dart';
-
-const int _firestoreFilterValueLimit = 30;
-
-List<List<T>> _chunkList<T>(List<T> items, int chunkSize) {
-  final chunks = <List<T>>[];
-  for (int i = 0; i < items.length; i += chunkSize) {
-    final end = (i + chunkSize < items.length) ? i + chunkSize : items.length;
-    chunks.add(items.sublist(i, end));
-  }
-  return chunks;
-}
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class EventsRepository {
-  final db = FirebaseFirestore.instance;
-  Future<List<AnnouncementDataModel>> fetchEvents() async {
-    try {
-      final followedPages = await UserRepository.getFollowedPageIds();
-      if (followedPages.isEmpty) {
-        return [];
-      }
+  static Future<List<AnnouncementDataModel>> fetchEvents() async {
+    final followedPageIds = await UserRepository.getFollowedPageIds();
+    if (followedPageIds.isEmpty) return [];
+    final uniquePageIds = followedPageIds.toSet().toList();
+    final supabase = Supabase.instance.client;
+    final response = await supabase
+        .from('announcements')
+        .select()
+        .inFilter('page_id', uniquePageIds)
+        .not('deadline', 'is', null)
+        .order('created_at', ascending: false);
 
-      final uniquePageIds = followedPages.toSet().toList();
-      final announcementsById = <String, Map<String, dynamic>>{};
-
-      for (final pageChunk in _chunkList(
-        uniquePageIds,
-        _firestoreFilterValueLimit,
-      )) {
-        final snapshot = await db
-            .collection('announcements')
-            .where('page_id', whereIn: pageChunk)
-            .get();
-
-        for (final doc in snapshot.docs) {
-          announcementsById[doc.id] = doc.data();
-        }
-      }
-
-      return announcementsById.values
-          .map((doc) => AnnouncementDataModel.fromMap(doc))
-          .toList();
-    } catch (e) {
-      throw Exception('Failed to load events: $e');
+    final events = <AnnouncementDataModel>[];
+    for (final doc in response) {
+      events.add(AnnouncementDataModel.fromMap(doc));
     }
+    return events;
   }
 }

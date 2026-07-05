@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:fcds_announcements/FollowPageFeature/Data%20Models/course_data_model.dart';
 import 'package:fcds_announcements/FollowPageFeature/Data%20Models/page_data_model.dart';
 import 'package:fcds_announcements/RecentMessagesFeature/repositories/notification_reciever_repository.dart';
-import 'package:fcds_announcements/main.dart';
+import 'package:fcds_announcements/utils/app_keys.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';

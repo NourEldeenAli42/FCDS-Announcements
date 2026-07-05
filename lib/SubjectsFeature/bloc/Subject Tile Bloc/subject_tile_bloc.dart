@@ -26,7 +26,7 @@ class SubjectTileBloc extends Bloc<SubjectTileEvent, SubjectTileState> {
             }
           }
           final urgentAnnouncement = await subjectsRepository
-              .getUrgentAnnouncement(followedPageIds);
+              .getUrgentAnnouncementForSubject(event.subjectId);
           emit(
             FollowedPagesLoaded(
               subjectId: event.subjectId,

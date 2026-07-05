@@ -44,7 +44,11 @@ class Event extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              Dateformatter.formatDate(announcement.date),
+              'Published at: ${Dateformatter.formatDate(announcement.date!)}',
+              style: MyTextStyle(fontSize: 14, color: Colors.grey[700]),
+            ),
+            Text(
+              'Deadline: ${Dateformatter.formatDate(announcement.deadline!)}',
               style: MyTextStyle(fontSize: 14, color: Colors.grey[700]),
             ),
           ],

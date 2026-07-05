@@ -5,11 +5,15 @@ class UrgentUpdateDataModel {
   String titleText;
   String bodyText;
   String timeText;
+  String redirectLink;
+  int pageId;
   UrgentUpdateDataModel({
     required this.chipText,
     required this.titleText,
     required this.bodyText,
     required this.timeText,
+    required this.pageId,
+    required this.redirectLink,
   });
   factory UrgentUpdateDataModel.fromDocument(Map<String, dynamic> document) {
     final postDate = DateTime.parse(document['created_at']);
@@ -23,6 +27,8 @@ class UrgentUpdateDataModel {
       titleText: document['title'] ?? '',
       bodyText: document['content'] ?? '',
       timeText: timeAgo,
+      pageId: document['page_id'] ?? 0,
+      redirectLink: document['redirect_link'] ?? '',
     );
   }
 }

@@ -1,5 +1,7 @@
+import 'package:fcds_announcements/AdminFeature/admin_view.dart';
 import 'package:fcds_announcements/LoginFeature/login_view.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
+import 'package:fcds_announcements/OnBoardingFeature/host_screen.dart';
 import 'package:fcds_announcements/PageFeedFeature/page_feed_view.dart';
 import 'package:fcds_announcements/ProfileFeature/profile_view.dart';
 import 'package:fcds_announcements/RecentMessagesFeature/messages_view.dart';
@@ -7,6 +9,7 @@ import 'package:fcds_announcements/RemindersFeature/bloc/Events%20Bloc/events_bl
 import 'package:fcds_announcements/main_view.dart';
 import 'package:fcds_announcements/RemindersFeature/bloc/Reminders%20Bloc/reminders_bloc.dart';
 import 'package:fcds_announcements/utils/AI%20Model/core_model.dart';
+import 'package:fcds_announcements/utils/app_keys.dart';
 import 'package:fcds_announcements/utils/supabase.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -14,12 +17,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 import 'firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:fcds_announcements/utils/repositories/firebase_messaging_repository.dart';
 
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+late final bool firstTimeUser;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initSupabase();
@@ -38,6 +43,8 @@ void main() async {
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   analytics.logAppOpen();
   AIModel.initialize();
+  final prefs = await SharedPreferences.getInstance();
+  firstTimeUser = prefs.getBool('firstTimeUser') ?? true;
   runApp(const MyApp());
 }
 
@@ -49,17 +56,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey,
+      scaffoldMessengerKey: scaffoldMessengerKey,
       routes: {
         '/home': (context) => HomeView(),
         '/messages': (context) => MessagesView(),
         '/profile': (context) => ProfileView(),
-        '/feed': (context) => PageFeedView(),
+        '/feed': (context) => PageFeedView(pageId: 0),
+        '/admin': (context) => AdminView(),
+        '/auth' :(context) => AuthWrapper(),
       },
       title: 'FCDS Announcements',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.tealAccent),
       ),
-      home: const AuthWrapper(),
+      home: firstTimeUser ?  const HostScreen() : const AuthWrapper(),
     );
   }
 }

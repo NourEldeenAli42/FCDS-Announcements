@@ -7,10 +7,10 @@ sealed class FeedEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadAnnouncementsEvent extends FeedEvent {
+class LoadFeedPageEvent extends FeedEvent {
   final int pageId;
 
-  const LoadAnnouncementsEvent({required this.pageId});
+  const LoadFeedPageEvent({required this.pageId});
 
   @override
   List<Object> get props => [pageId];
@@ -18,8 +18,37 @@ class LoadAnnouncementsEvent extends FeedEvent {
 
 class RefreshAnnouncementsEvent extends FeedEvent {
   final int pageId;
+  final PageFeedDataModel page;
 
-  const RefreshAnnouncementsEvent({required this.pageId});
+  const RefreshAnnouncementsEvent({required this.pageId, required this.page});
+
+  @override
+  List<Object> get props => [pageId, page];
+}
+
+class DeleteAnnouncementEvent extends FeedEvent {
+  final int announcementId;
+
+
+  const DeleteAnnouncementEvent({required this.announcementId});
+
+  @override
+  List<Object> get props => [announcementId];
+}
+
+class EditAnnouncementEvent extends FeedEvent {
+  final AnnouncementDataModel announcement;
+
+  const EditAnnouncementEvent({required this.announcement});
+
+  @override
+  List<Object> get props => [announcement];
+}
+
+class ToggleNotificationEvent extends FeedEvent {
+  final int pageId;
+
+  const ToggleNotificationEvent({required this.pageId});
 
   @override
   List<Object> get props => [pageId];

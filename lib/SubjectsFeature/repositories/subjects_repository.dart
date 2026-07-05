@@ -19,13 +19,13 @@ class SubjectsRepository {
         .from('pages')
         .select('course_id, courses(*)')
         .inFilter('id', uniquePageIds);
-    final temp_ids = [];
+    final tempIds = [];
     for (final course in response) {
-      if (temp_ids.contains(course['id'])) {
+      if (tempIds.contains(course['course_id'])) {
         continue;
       }
       coursesById.add(CourseDataModel.fromDocument(course['courses']));
-      temp_ids.add(course['id']);
+      tempIds.add(course['course_id']);
     }
     return coursesById;
   }
@@ -41,6 +41,46 @@ class SubjectsRepository {
         .from('announcements')
         .select()
         .inFilter('page_id', followedPageIds)
+        .eq('is_urgent', true)
+        .order('created_at', ascending: false)
+        .limit(1);
+
+    if (latestDoc.isEmpty) {
+      return null;
+    }
+
+    final announcement = UrgentUpdateDataModel.fromDocument(latestDoc.first);
+    return announcement;
+  }
+
+  Future<UrgentUpdateDataModel?> getUrgentAnnouncementForSubject(
+    String subjectId,
+  ) async {
+    final supabase = Supabase.instance.client;
+
+    final followedPages = await UserRepository.getFollowedPageIds();
+    if (followedPages.isEmpty) {
+      return null;
+    }
+
+    final pagesResponse = await supabase
+        .from('pages')
+        .select('id')
+        .eq('course_id', subjectId)
+        .inFilter('id', followedPages);
+
+    final pageIdsForSubject = pagesResponse
+        .map((page) => page['id'] as int)
+        .toList();
+
+    if (pageIdsForSubject.isEmpty) {
+      return null;
+    }
+
+    final latestDoc = await supabase
+        .from('announcements')
+        .select()
+        .inFilter('page_id', pageIdsForSubject)
         .eq('is_urgent', true)
         .order('created_at', ascending: false)
         .limit(1);

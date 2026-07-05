@@ -6,6 +6,7 @@ class PageDataModel {
   final String hall;
   final String instructor;
   final TimeOfDay startTime;
+  bool isNotificationEnabled;
   bool isFollowed;
 
   PageDataModel({
@@ -14,6 +15,7 @@ class PageDataModel {
     required this.hall,
     required this.instructor,
     required this.startTime,
+    this.isNotificationEnabled = false,
     this.isFollowed = false,
   });
 

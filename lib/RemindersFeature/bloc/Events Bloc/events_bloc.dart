@@ -8,12 +8,11 @@ part 'events_state.dart';
 
 class EventsBloc extends Bloc<EventsEvent, EventsState> {
   EventsBloc() : super(EventsInitial()) {
-    EventsRepository repository = EventsRepository();
     on<EventsEvent>((event, emit) async {
       if (event is LoadEventsEvent) {
         emit(EventsLoadingState());
         try {
-          final events = await repository.fetchEvents();
+          final events = await EventsRepository.fetchEvents();
           events.removeWhere((event) => event.deadline == null);
 
           // Select today's events by default

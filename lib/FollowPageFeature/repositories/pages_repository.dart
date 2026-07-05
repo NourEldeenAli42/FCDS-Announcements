@@ -2,6 +2,7 @@ import 'package:fcds_announcements/FollowPageFeature/Data%20Models/course_data_m
 import 'package:fcds_announcements/FollowPageFeature/Data%20Models/page_data_model.dart';
 import 'package:fcds_announcements/utils/repositories/user_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PagesRepository {
@@ -26,7 +27,9 @@ class PagesRepository {
   }
 
   Future<void> followPage({required String userId, required int pageID}) async {
-    FirebaseMessaging.instance.subscribeToTopic(pageID.toString());
+    await FirebaseMessaging.instance.subscribeToTopic(pageID.toString());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(pageID.toString(), true);
 
     final supabase = Supabase.instance.client;
     await supabase.from('follows').insert({
@@ -39,7 +42,9 @@ class PagesRepository {
     required String userId,
     required int pageID,
   }) async {
-    FirebaseMessaging.instance.unsubscribeFromTopic(pageID.toString());
+    await FirebaseMessaging.instance.unsubscribeFromTopic(pageID.toString());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(pageID.toString(), false);
     final supabase = Supabase.instance.client;
     await supabase
         .from('follows')
