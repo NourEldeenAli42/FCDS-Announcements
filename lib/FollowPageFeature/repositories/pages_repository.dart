@@ -12,7 +12,7 @@ class PagesRepository {
     return response.map((data) => CourseDataModel.fromDocument(data)).toList();
   }
 
-  Future<List<PageDataModel>> fetchCourseSpecificPages(String courseId) async {
+  Future<List<PageDataModel>> fetchCourseSpecificPages(int courseId) async {
     final response = await supabase
         .from('pages')
         .select('*, instructors(instructor_name)')

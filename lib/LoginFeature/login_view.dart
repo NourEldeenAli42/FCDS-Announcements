@@ -1,5 +1,6 @@
 import 'package:fcds_announcements/LoginFeature/bloc/google_login_bloc.dart';
 import 'package:fcds_announcements/LoginFeature/repositories/auth_repository.dart';
+import 'package:fcds_announcements/utils/Widgets/text_style.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -79,9 +80,61 @@ class LoginView extends StatelessWidget {
                     BlocConsumer<GoogleLoginBloc, GoogleLoginState>(
                       listener: (context, state) {
                         if (state is GoogleLoginFailure) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(state.errorMessage)),
-                          );
+                          if (state.errorMessage.contains('User is banned')) {
+                            showAdaptiveDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    'Access Denied',
+                                    style: MyTextStyle(
+                                      fontSize: 16,
+                                      fontWeight: .bold,
+                                    ),
+                                  ),
+                                  content: Text.rich(
+                                    TextSpan(
+                                      text: 'Your account has been ',
+                                      style: MyTextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: 'banned',
+                                          style: MyTextStyle(
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontWeight: .bold,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text:
+                                              ' from accessing the FCDS Announcements app. Please contact the administrator for more information.',
+                                          style: MyTextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(state.errorMessage)),
+                            );
+                          }
                         }
                       },
                       builder: (context, state) {

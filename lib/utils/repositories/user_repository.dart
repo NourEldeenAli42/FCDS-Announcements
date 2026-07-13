@@ -70,4 +70,21 @@ class UserRepository {
     }
     return followedPageIds;
   }
+
+  static Future<bool> userHasPermission(int pageId) async {
+    if (await isUserAdmin()) {
+      return true;
+    }
+    final supabase = Supabase.instance.client;
+    final user = supabase.auth.currentUser;
+    if (user == null) {
+      throw Exception('User not authenticated yet');
+    }
+    final response = await supabase
+        .from('permissions')
+        .select()
+        .eq('user_id', user.id)
+        .eq('page_id', pageId);
+    return response.isNotEmpty;
+  }
 }

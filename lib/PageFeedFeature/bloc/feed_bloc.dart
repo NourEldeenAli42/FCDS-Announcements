@@ -20,7 +20,9 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         final page = await FeedRepository.fetchPage(event.pageId);
         final isNotificationEnabled =
             await FeedRepository.isNotificationEnabled(event.pageId);
-        final adminStatus = await UserRepository.isUserAdmin();
+        final adminStatus = await UserRepository.userHasPermission(
+          event.pageId,
+        );
         emit(
           FeedLoaded(
             announcements: announcements,
@@ -35,7 +37,9 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         );
         final isNotificationEnabled =
             await FeedRepository.isNotificationEnabled(event.pageId);
-        final adminStatus = await UserRepository.isUserAdmin();
+        final adminStatus = await UserRepository.userHasPermission(
+          event.pageId,
+        );
         emit(
           FeedLoaded(
             announcements: announcements,
@@ -86,13 +90,15 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       } else if (event is ToggleNotificationEvent) {
         final currentState = state;
         if (currentState is FeedLoaded) {
-          emit(FeedLoaded(
-            announcements: currentState.announcements,
-            page: currentState.page,
-            isAdmin: currentState.isAdmin,
-            isNotificationEnabled: currentState.isNotificationEnabled,
-            isTogglingNotifications: true,
-          ));
+          emit(
+            FeedLoaded(
+              announcements: currentState.announcements,
+              page: currentState.page,
+              isAdmin: currentState.isAdmin,
+              isNotificationEnabled: currentState.isNotificationEnabled,
+              isTogglingNotifications: true,
+            ),
+          );
           final newStatus = !currentState.isNotificationEnabled;
           await FeedRepository.flipNotificationStatus(pageId: event.pageId);
           emit(

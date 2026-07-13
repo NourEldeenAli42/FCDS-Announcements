@@ -1,4 +1,10 @@
 import 'package:fcds_announcements/AdminFeature/admin_view.dart';
+import 'package:fcds_announcements/AdminFeature/bloc/manage_courses_bloc/manage_courses_bloc.dart';
+import 'package:fcds_announcements/AdminFeature/bloc/manage_pages_bloc/manage_pages_bloc.dart';
+import 'package:fcds_announcements/AdminFeature/manage_courses_view.dart';
+import 'package:fcds_announcements/AdminFeature/manage_pages_view.dart';
+import 'package:fcds_announcements/AdminFeature/manage_users_view.dart';
+import 'package:fcds_announcements/AdminFeature/permessions_view.dart';
 import 'package:fcds_announcements/LoginFeature/login_view.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
 import 'package:fcds_announcements/OnBoardingFeature/host_screen.dart';
@@ -63,13 +69,23 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => ProfileView(),
         '/feed': (context) => PageFeedView(pageId: 0),
         '/admin': (context) => AdminView(),
-        '/auth' :(context) => AuthWrapper(),
+        '/auth': (context) => AuthWrapper(),
+        '/users': (context) => ManageUsersView(),
+        '/permissions': (context) => PermessionsView(),
+        '/manage_courses': (context) => BlocProvider<ManageCoursesBloc>(
+          create: (context) => ManageCoursesBloc()..add(LoadCourses()),
+          child: ManageCoursesView(),
+        ),
+        '/manage_subjects': (context) => BlocProvider(
+          create: (context) => ManagePagesBloc()..add(LoadPagesEvent()),
+          child: ManagePagesView(),
+        ),
       },
       title: 'FCDS Announcements',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.tealAccent),
       ),
-      home: firstTimeUser ?  const HostScreen() : const AuthWrapper(),
+      home: firstTimeUser ? const HostScreen() : const AuthWrapper(),
     );
   }
 }

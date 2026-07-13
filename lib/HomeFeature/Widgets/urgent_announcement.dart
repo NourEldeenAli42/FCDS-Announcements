@@ -133,10 +133,10 @@ class _UrgentAnnouncementState extends State<UrgentAnnouncement> {
                         fontSize: 20,
                         fontWeight: .bold,
                       ),
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         counterText: '',
                         hintText: 'Enter title',
-                        hintStyle: TextStyle(color: Colors.white70),
+                        hintStyle: MyTextStyle(color: Colors.white70),
                         border: InputBorder.none,
                         isDense: true,
                         contentPadding: EdgeInsets.zero,

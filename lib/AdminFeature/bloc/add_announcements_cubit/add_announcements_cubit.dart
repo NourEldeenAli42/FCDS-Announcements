@@ -78,4 +78,26 @@ class AddAnnouncementsCubit extends Cubit<AddAnnouncementsCubitState> {
       emit(AddAnnouncementsCubitError(message: 'Failed to send notification.'));
     }
   }
+  Future<void> addPriorityDeadline({
+    required String title,
+    required DateTime deadline,
+    required bool notificationEnabled,
+    required int pageId,
+  }) async {
+    emit(AddAnnouncementsCubitLoading());
+    try {
+      await AdminRepository.addPriorityDeadline(
+        title: title,
+        deadline: deadline,
+        pageId: pageId,
+      );
+      emit(
+        AddAnnouncementsCubitSuccess(
+          message: 'Priority deadline added successfully!',
+        ),
+      );
+    } catch (e) {
+      emit(AddAnnouncementsCubitError(message: 'Failed to add priority deadline.'));
+    }
+  }
 }

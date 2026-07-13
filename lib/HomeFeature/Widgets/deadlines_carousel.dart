@@ -23,8 +23,7 @@ class _CarouselWithIndicatorState extends State<DeadlinesCarousel> {
         CarouselSlider(
           items: widget.priorityDeadlines.map((deadline) {
             return PriorityDeadlineCard(
-              title: deadline.title,
-              timeLeft: deadline.remainingTime,
+              priorityDeadline: deadline,
             );
           }).toList(),
           carouselController: _controller,

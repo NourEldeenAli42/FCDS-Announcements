@@ -71,6 +71,7 @@ class FirebaseMessagingRepository {
             id: data['course_id'],
             name: data['course_name'],
             description: data['description'],
+            credits: data['credits'],
           ),
           'pdm': PageDataModel(
             id: data['page_id'],
@@ -85,6 +86,7 @@ class FirebaseMessagingRepository {
                   ? int.parse(data['start_time'].split(':')[1])
                   : 0,
             ),
+            courseId: data['course_id'],
           ),
         },
       );

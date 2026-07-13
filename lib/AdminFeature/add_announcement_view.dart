@@ -1,5 +1,6 @@
 import 'package:fcds_announcements/AdminFeature/Widgets/notification_example.dart';
-import 'package:fcds_announcements/AdminFeature/bloc/cubit/add_announcements_cubit.dart';
+import 'package:fcds_announcements/AdminFeature/bloc/add_announcements_cubit/add_announcements_cubit.dart';
+import 'package:fcds_announcements/HomeFeature/Widgets/priority_deadline.dart';
 import 'package:fcds_announcements/HomeFeature/Widgets/urgent_announcement.dart';
 import 'package:fcds_announcements/PageFeedFeature/Widgets/announcement.dart';
 import 'package:fcds_announcements/utils/app_keys.dart';
@@ -94,6 +95,33 @@ class AddAnnouncementView extends StatelessWidget {
                           pageId: pageId,
                         );
                       },
+                    ),
+                    PriorityDeadlineCard.editing(
+                      onSubmit:
+                          ({
+                            required deadline,
+                            required notificationEnabled,
+                            required title,
+                          }) {
+                            context
+                                .read<AddAnnouncementsCubit>()
+                                .addPriorityDeadline(
+                                  title: title,
+                                  deadline: deadline,
+                                  notificationEnabled: notificationEnabled,
+                                  pageId: pageId,
+                                );
+                            if (notificationEnabled) {
+                              context
+                                  .read<AddAnnouncementsCubit>()
+                                  .sendNotification(
+                                    title: title,
+                                    content:
+                                        'New Deadline is set for ${deadline.weekday}, ${deadline.month}/${deadline.day}/${deadline.year} at ${deadline.hour}:${deadline.minute}',
+                                    pageId: pageId,
+                                  );
+                            }
+                          },
                     ),
                   ],
                 ),

@@ -6,6 +6,7 @@ class PageDataModel {
   final String hall;
   final String instructor;
   final TimeOfDay startTime;
+  final int courseId;
   bool isNotificationEnabled;
   bool isFollowed;
 
@@ -15,6 +16,7 @@ class PageDataModel {
     required this.hall,
     required this.instructor,
     required this.startTime,
+    required this.courseId,
     this.isNotificationEnabled = false,
     this.isFollowed = false,
   });
@@ -34,6 +36,7 @@ class PageDataModel {
             : 0,
       ),
       isFollowed: map['isFollowed'] ?? false,
+      courseId: map['course_id'] ?? 0,
     );
   }
 }

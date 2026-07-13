@@ -54,7 +54,7 @@ class SubjectsRepository {
   }
 
   Future<UrgentUpdateDataModel?> getUrgentAnnouncementForSubject(
-    String subjectId,
+    int subjectId,
   ) async {
     final supabase = Supabase.instance.client;
 

@@ -126,8 +126,7 @@ class HomeView extends StatelessWidget {
                               if (priorityDeadline.isNotEmpty) {
                                 if (priorityDeadline.length == 1) {
                                   return PriorityDeadlineCard(
-                                    title: priorityDeadline[0].title,
-                                    timeLeft: priorityDeadline[0].remainingTime,
+                                    priorityDeadline: priorityDeadline[0],
                                   );
                                 }
                                 return DeadlinesCarousel(

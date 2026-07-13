@@ -70,8 +70,7 @@ class SearchCourses extends SearchDelegate {
             final filteredResults = results
                 .where(
                   (course) =>
-                      course.name.toLowerCase().contains(query.toLowerCase()) ||
-                      course.id.toLowerCase().contains(query.toLowerCase()),
+                      course.name.toLowerCase().contains(query.toLowerCase())
                 )
                 .toList();
             if (results.isEmpty) {
@@ -137,8 +136,7 @@ class SearchCourses extends SearchDelegate {
             final filteredResults = results
                 .where(
                   (course) =>
-                      course.name.toLowerCase().contains(query.toLowerCase()) ||
-                      course.id.toLowerCase().contains(query.toLowerCase()),
+                      course.name.toLowerCase().contains(query.toLowerCase())
                 )
                 .toList();
             return ListView.builder(
