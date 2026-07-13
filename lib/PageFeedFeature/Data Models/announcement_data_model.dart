@@ -1,28 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AnnouncementDataModel {
-  final DateTime date;
+  final int id;
+  final DateTime? date;
   final String title;
   final String content;
-  final String redirectUrl;
+  final String redirectLink;
   final DateTime? deadline;
 
-  AnnouncementDataModel({
+  const AnnouncementDataModel({
+    required this.id,
     required this.date,
     required this.title,
     required this.content,
-    required this.redirectUrl,
+    required this.redirectLink,
     this.deadline,
   });
 
   factory AnnouncementDataModel.fromMap(Map<String, dynamic> map) {
     return AnnouncementDataModel(
-      date: (DateTime.fromMillisecondsSinceEpoch(
-        (map['post_time'] as Timestamp).millisecondsSinceEpoch,
-      )),
+      id: map['id'] ?? 0,
+      date: (DateTime.parse(map['created_at'])),
       title: map['title'] ?? '',
-      content: map['description'] ?? '',
-      redirectUrl: map['redirect_link'] ?? '',
+      content: map['content'] ?? '',
+      redirectLink: map['redirect_link'] ?? '',
       deadline: _parseDeadline(map['deadline']),
     );
   }
@@ -51,6 +52,6 @@ class AnnouncementDataModel {
       return deadline;
     }
 
-    return null;
+    return DateTime.parse(deadline);
   }
 }

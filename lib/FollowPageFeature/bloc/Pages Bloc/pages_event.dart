@@ -10,7 +10,6 @@ sealed class PagesEvent extends Equatable {
 class FetchCoursesEvent extends PagesEvent {}
 
 class FetchPagesEvent extends PagesEvent {
-  final String courseName;
-  const FetchPagesEvent(this.courseName);
+  final int courseId;
+  const FetchPagesEvent(this.courseId);
 }
-

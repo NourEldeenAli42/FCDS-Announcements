@@ -82,7 +82,11 @@ class SubjectTile extends StatelessWidget {
                                   (page) => ListTile(
                                     subtitle: Wrap(
                                       children: [
-                                        for (var tag in page.tags)
+                                        for (var tag in [
+                                          page.hall,
+                                          page.instructor,
+                                          page.startTime.format(context),
+                                        ])
                                           Container(
                                             margin: EdgeInsets.only(
                                               right: 6,
@@ -125,17 +129,19 @@ class SubjectTile extends StatelessWidget {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => PageFeedView(
-                                            subject: subject,
-                                            page: page,
-                                          ),
+                                          builder: (context) =>
+                                              PageFeedView(pageId: page.id),
                                         ),
                                       );
                                     },
-                                    trailing: Icon(
-                                      Icons.arrow_forward_ios_rounded,
-                                      size: 16,
-                                      color: Colors.grey.shade700,
+                                    trailing: Wrap(
+                                      children: [
+                                        Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          size: 16,
+                                          color: Colors.grey.shade700,
+                                        ),
+                                      ],
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),

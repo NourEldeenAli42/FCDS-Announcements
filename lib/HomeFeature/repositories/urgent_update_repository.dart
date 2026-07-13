@@ -1,65 +1,24 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcds_announcements/HomeFeature/Models/urgent_announcement_data_model.dart';
-
-const int _firestoreFilterValueLimit = 30;
-
-List<List<T>> _chunkList<T>(List<T> items, int chunkSize) {
-  final chunks = <List<T>>[];
-  for (int i = 0; i < items.length; i += chunkSize) {
-    final end = (i + chunkSize < items.length) ? i + chunkSize : items.length;
-    chunks.add(items.sublist(i, end));
-  }
-  return chunks;
-}
+import 'package:fcds_announcements/utils/repositories/user_repository.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UrgentAnnouncementRepository {
-  final FirebaseFirestore _firestore;
-
-  UrgentAnnouncementRepository({FirebaseFirestore? firestore})
-    : _firestore = firestore ?? FirebaseFirestore.instance;
-
-  Future<UrgentUpdateDataModel?> getUrgentAnnouncement(
-    List<String> followedPageIds,
-  ) async {
+  static Future<UrgentUpdateDataModel?> getUrgentAnnouncement() async {
+    final followedPageIds = await UserRepository.getFollowedPageIds();
     if (followedPageIds.isEmpty) return null;
-
+    final supabase = Supabase.instance.client;
     final uniquePageIds = followedPageIds.toSet().toList();
-    QueryDocumentSnapshot<Map<String, dynamic>>? latestDoc;
+    final response = await supabase
+        .from('announcements')
+        .select()
+        .inFilter('page_id', uniquePageIds)
+        .eq('is_urgent', true)
+        .order('created_at', ascending: false)
+        .limit(1);
+    if (response.isEmpty) return null;
+    final latestDoc = response.first;
 
-    for (final pageChunk in _chunkList(
-      uniquePageIds,
-      _firestoreFilterValueLimit,
-    )) {
-      final query = await _firestore
-          .collection('announcements')
-          .where('page_id', whereIn: pageChunk)
-          .where('isUrgent', isEqualTo: true)
-          .orderBy('post_time', descending: true)
-          .limit(1)
-          .get();
-
-      if (query.docs.isEmpty) {
-        continue;
-      }
-
-      final candidate = query.docs.first;
-      if (latestDoc == null) {
-        latestDoc = candidate;
-        continue;
-      }
-
-      final candidateTimestamp = candidate.data()['post_time'] as Timestamp;
-      final latestTimestamp = latestDoc.data()['post_time'] as Timestamp;
-      if (candidateTimestamp.toDate().isAfter(latestTimestamp.toDate())) {
-        latestDoc = candidate;
-      }
-    }
-
-    if (latestDoc == null) {
-      return null;
-    }
-
-    final announcement = UrgentUpdateDataModel.fromFirestore(latestDoc.data());
+    final announcement = UrgentUpdateDataModel.fromDocument(latestDoc);
     return announcement;
   }
 }

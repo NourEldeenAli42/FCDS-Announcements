@@ -1,5 +1,6 @@
 import 'package:fcds_announcements/HomeFeature/Widgets/deadlines_carousel.dart';
 import 'package:fcds_announcements/HomeFeature/Widgets/function_card.dart';
+import 'package:fcds_announcements/HomeFeature/Widgets/priority_deadline.dart';
 import 'package:fcds_announcements/HomeFeature/Widgets/urgent_announcement.dart';
 import 'package:fcds_announcements/HomeFeature/bloc/Announcement%20Bloc/announcement_bloc.dart';
 import 'package:fcds_announcements/HomeFeature/bloc/Function%20Buttons%20Bloc/function_buttons_bloc.dart';
@@ -38,6 +39,9 @@ class HomeView extends StatelessWidget {
                       );
                       context.read<PriorityDeadlineBloc>().add(
                         RefreshPriorityDeadlineEvent(),
+                      );
+                      context.read<FunctionButtonsBloc>().add(
+                        LoadReadFunctionButtonsEvent(),
                       );
                     },
                     child: ListView(
@@ -80,6 +84,8 @@ class HomeView extends StatelessWidget {
                                     titleText: announcement.titleText,
                                     bodyText: announcement.bodyText,
                                     timeText: announcement.timeText,
+                                    pageId: announcement.pageId,
+                                    redirectLink: announcement.redirectLink,
                                   ),
                                 );
                               } else {
@@ -118,6 +124,11 @@ class HomeView extends StatelessWidget {
                               final priorityDeadline = state.priorityDeadline;
 
                               if (priorityDeadline.isNotEmpty) {
+                                if (priorityDeadline.length == 1) {
+                                  return PriorityDeadlineCard(
+                                    priorityDeadline: priorityDeadline[0],
+                                  );
+                                }
                                 return DeadlinesCarousel(
                                   priorityDeadlines: priorityDeadline,
                                 );
@@ -175,6 +186,25 @@ class HomeView extends StatelessWidget {
                                 );
                               },
                             );
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        BlocBuilder<FunctionButtonsBloc, FunctionButtonsState>(
+                          builder: (context, state) {
+                            if (state is FunctionButtonsReadLoaded &&
+                                state.isAdmin) {
+                              return FunctionCard(
+                                hasUnread: false,
+                                icon: Icons.admin_panel_settings,
+                                label: 'Admin Panel',
+                                color: Colors.red,
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/admin');
+                                },
+                              );
+                            } else {
+                              return SizedBox.shrink();
+                            }
                           },
                         ),
                       ],

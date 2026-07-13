@@ -11,9 +11,9 @@ import 'package:fcds_announcements/SubjectsFeature/bloc/Subjects%20Bloc/subjects
 import 'package:fcds_announcements/generated/assets.dart';
 import 'package:fcds_announcements/utils/date_formatter.dart';
 import 'package:fcds_announcements/utils/Widgets/text_style.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MainView extends StatefulWidget {
   const MainView({super.key});
@@ -24,6 +24,14 @@ class MainView extends StatefulWidget {
 
 class _MainViewState extends State<MainView> {
   final _pageViewController = PageController();
+
+  String? _avatarUrlFromMetadata(Object? avatarUrl) {
+    if (avatarUrl is! String) return null;
+
+    final match = RegExp(r'https?://[^\s\]\)]+').firstMatch(avatarUrl);
+    return match?.group(0);
+  }
+
   @override
   dispose() {
     _pageViewController.dispose();
@@ -31,6 +39,7 @@ class _MainViewState extends State<MainView> {
   }
 
   int _currentIndex = 0;
+
   Widget getCurrentPage(int index) {
     switch (index) {
       case 0:
@@ -62,7 +71,7 @@ class _MainViewState extends State<MainView> {
             )
           : _currentIndex == 2
           ? FloatingActionButton(
-              onPressed: () {
+              onPressed: () async {
                 showDialog(
                   context: context,
                   builder: (dialogContext) {
@@ -156,7 +165,15 @@ class _MainViewState extends State<MainView> {
                 ),
               ),
               TextSpan(
-                text: FirebaseAuth.instance.currentUser?.displayName ?? 'User',
+                //TODO: Fetch the user's name from Supabase DATABASE and display it here
+                text:
+                    Supabase
+                        .instance
+                        .client
+                        .auth
+                        .currentUser
+                        ?.userMetadata?['full_name'] ??
+                    'User',
                 style: MyTextStyle(
                   color: Color(0xFF111815),
                   fontSize: 18,
@@ -172,45 +189,71 @@ class _MainViewState extends State<MainView> {
             onTap: () {
               Navigator.pushNamed(context, '/profile');
             },
-            child: Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.blue, width: 2.5),
-                  ),
-                  child: CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.grey[300],
-                    child: CachedNetworkImage(
-                      placeholder: (context, url) => CircleAvatar(
+            child: Builder(
+              builder: (context) {
+                final avatarUrl = _avatarUrlFromMetadata(
+                  Supabase
+                      .instance
+                      .client
+                      .auth
+                      .currentUser
+                      ?.userMetadata?['avatar_url'],
+                );
+
+                final avatar = avatarUrl == null
+                    ? CircleAvatar(
                         radius: 18,
-                        backgroundImage: AssetImage(Assets.assetsLinks),
+                        backgroundImage: AssetImage(Assets.profile),
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: avatarUrl,
+                        placeholder: (context, url) => CircleAvatar(
+                          radius: 18,
+                          backgroundImage: AssetImage(Assets.profile),
+                        ),
+                        errorWidget: (context, url, error) => CircleAvatar(
+                          radius: 18,
+                          backgroundImage: AssetImage(Assets.profile),
+                        ),
+                        imageBuilder: (context, imageProvider) => CircleAvatar(
+                          radius: 18,
+                          backgroundImage: imageProvider,
+                        ),
+                      );
+
+                return Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.blue, width: 2.5),
                       ),
-                      imageUrl:
-                          FirebaseAuth.instance.currentUser?.photoURL ??
-                          Assets.assetsLinks,
-                      imageBuilder: (context, imageProvider) => CircleAvatar(
-                        radius: 18,
-                        backgroundImage: imageProvider,
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.grey[300],
+                        child: avatar,
                       ),
                     ),
-                  ),
-                ),
-                Positioned(
-                  bottom: -2,
-                  right: -2,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey[800],
-                      border: Border.all(color: Colors.white, width: 2),
+                    Positioned(
+                      bottom: -2,
+                      right: -2,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.grey[800],
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
+                        padding: EdgeInsets.all(4),
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 12,
+                        ),
+                      ),
                     ),
-                    padding: EdgeInsets.all(4),
-                    child: Icon(Icons.person, color: Colors.white, size: 12),
-                  ),
-                ),
-              ],
+                  ],
+                );
+              },
             ),
           ),
         ],

@@ -1,28 +1,39 @@
-import 'dart:developer';
-
+import 'package:fcds_announcements/AdminFeature/admin_view.dart';
+import 'package:fcds_announcements/AdminFeature/bloc/manage_courses_bloc/manage_courses_bloc.dart';
+import 'package:fcds_announcements/AdminFeature/bloc/manage_pages_bloc/manage_pages_bloc.dart';
+import 'package:fcds_announcements/AdminFeature/manage_courses_view.dart';
+import 'package:fcds_announcements/AdminFeature/manage_pages_view.dart';
+import 'package:fcds_announcements/AdminFeature/manage_users_view.dart';
+import 'package:fcds_announcements/AdminFeature/permessions_view.dart';
 import 'package:fcds_announcements/LoginFeature/login_view.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
+import 'package:fcds_announcements/OnBoardingFeature/host_screen.dart';
 import 'package:fcds_announcements/PageFeedFeature/page_feed_view.dart';
 import 'package:fcds_announcements/ProfileFeature/profile_view.dart';
 import 'package:fcds_announcements/RecentMessagesFeature/messages_view.dart';
 import 'package:fcds_announcements/RemindersFeature/bloc/Events%20Bloc/events_bloc.dart';
 import 'package:fcds_announcements/main_view.dart';
 import 'package:fcds_announcements/RemindersFeature/bloc/Reminders%20Bloc/reminders_bloc.dart';
+import 'package:fcds_announcements/utils/AI%20Model/core_model.dart';
+import 'package:fcds_announcements/utils/app_keys.dart';
+import 'package:fcds_announcements/utils/supabase.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 import 'firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:fcds_announcements/utils/repositories/firebase_messaging_repository.dart';
 
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+late final bool firstTimeUser;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initSupabase();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseAppCheck.instance.activate(
     providerAndroid: AndroidDebugProvider(),
@@ -34,9 +45,12 @@ void main() async {
   if (!kIsWeb) {
     FirebaseDatabase.instance.setPersistenceEnabled(true);
   }
-  log("Token initialized: ${await FirebaseMessaging.instance.getToken()}");
+
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   analytics.logAppOpen();
+  AIModel.initialize();
+  final prefs = await SharedPreferences.getInstance();
+  firstTimeUser = prefs.getBool('firstTimeUser') ?? true;
   runApp(const MyApp());
 }
 
@@ -48,17 +62,30 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey,
+      scaffoldMessengerKey: scaffoldMessengerKey,
       routes: {
         '/home': (context) => HomeView(),
         '/messages': (context) => MessagesView(),
         '/profile': (context) => ProfileView(),
-        '/feed': (context) => PageFeedView(),
+        '/feed': (context) => PageFeedView(pageId: 0),
+        '/admin': (context) => AdminView(),
+        '/auth': (context) => AuthWrapper(),
+        '/users': (context) => ManageUsersView(),
+        '/permissions': (context) => PermessionsView(),
+        '/manage_courses': (context) => BlocProvider<ManageCoursesBloc>(
+          create: (context) => ManageCoursesBloc()..add(LoadCourses()),
+          child: ManageCoursesView(),
+        ),
+        '/manage_subjects': (context) => BlocProvider(
+          create: (context) => ManagePagesBloc()..add(LoadPagesEvent()),
+          child: ManagePagesView(),
+        ),
       },
       title: 'FCDS Announcements',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.tealAccent),
       ),
-      home: const AuthWrapper(),
+      home: firstTimeUser ? const HostScreen() : const AuthWrapper(),
     );
   }
 }
@@ -68,30 +95,22 @@ class AuthWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // StreamBuilder listens to the Firebase Auth state
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
+    return StreamBuilder<AuthState?>(
+      stream: Supabase.instance.client.auth.onAuthStateChange,
       builder: (context, snapshot) {
-        // 1. Check if the connection is still loading
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
+        final session = snapshot.data?.session;
+
+        if (session == null) {
+          return const LoginView();
         }
 
-        // 2. If the snapshot has user data, they are logged in
-        if (snapshot.hasData) {
-          return BlocProvider(
-            create: (context) => RemindersBloc(),
-            child: BlocProvider(
-              create: (context) => EventsBloc(),
-              child: MainView(),
-            ),
-          );
-        }
-
-        // 3. Otherwise, show the login screen
-        return const LoginView();
+        return BlocProvider(
+          create: (context) => RemindersBloc(),
+          child: BlocProvider(
+            create: (context) => EventsBloc(),
+            child: MainView(),
+          ),
+        );
       },
     );
   }

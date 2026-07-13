@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileView extends StatelessWidget {
@@ -17,13 +18,22 @@ class ProfileView extends StatelessWidget {
   final bool isUpdaterAvailable = ShorebirdUpdater().isAvailable;
 
   final nameController = TextEditingController(
-    text: FirebaseAuth.instance.currentUser?.displayName ?? '',
+    text:
+        Supabase.instance.client.auth.currentUser?.userMetadata?['full_name'] ??
+        '',
   );
+
+  String? _avatarUrlFromMetadata(Object? avatarUrl) {
+    if (avatarUrl is! String) return null;
+
+    final match = RegExp(r'https?://[^\s\]\)]+').firstMatch(avatarUrl);
+    return match?.group(0);
+  }
 
   Future<String> getAppInfo() async {
     final packageInfo = await PackageInfo.fromPlatform();
     final patch = await ShorebirdUpdater().readCurrentPatch();
-    return 'Version: ${packageInfo.version}(${patch?.number})\n\n';
+    return 'Version: ${packageInfo.version}(${patch?.number ?? '0'})\n\n';
   }
 
   @override
@@ -146,19 +156,50 @@ class ProfileView extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.teal.withAlpha(150),
-                        child: CachedNetworkImage(
-                          imageUrl:
-                              FirebaseAuth.instance.currentUser?.photoURL ??
-                              Assets.assetsLinks,
-                          imageBuilder: (context, imageProvider) =>
-                              CircleAvatar(
-                                backgroundImage: imageProvider,
+                      Builder(
+                        builder: (context) {
+                          final avatarUrl = _avatarUrlFromMetadata(
+                            Supabase
+                                .instance
+                                .client
+                                .auth
+                                .currentUser
+                                ?.userMetadata?['avatar_url'],
+                          );
+
+                          if (avatarUrl == null) {
+                            return CircleAvatar(
+                              radius: 50,
+                              backgroundColor: Colors.teal.withAlpha(150),
+                              child: CircleAvatar(
                                 radius: 48,
+                                backgroundImage: AssetImage(Assets.profile),
                               ),
-                        ),
+                            );
+                          }
+
+                          return CircleAvatar(
+                            radius: 50,
+                            backgroundColor: Colors.teal.withAlpha(150),
+                            child: CachedNetworkImage(
+                              imageUrl: avatarUrl,
+                              imageBuilder: (context, imageProvider) =>
+                                  CircleAvatar(
+                                    backgroundImage: imageProvider,
+                                    radius: 48,
+                                  ),
+                              placeholder: (context, url) => CircleAvatar(
+                                radius: 48,
+                                backgroundImage: AssetImage(Assets.profile),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  CircleAvatar(
+                                    radius: 48,
+                                    backgroundImage: AssetImage(Assets.profile),
+                                  ),
+                            ),
+                          );
+                        },
                       ),
                       SizedBox(height: 16),
                       Text(
@@ -186,7 +227,9 @@ class ProfileView extends StatelessWidget {
                           border: OutlineInputBorder(),
                         ),
                         controller: TextEditingController(
-                          text: FirebaseAuth.instance.currentUser?.uid ?? 'N/A',
+                          text:
+                              Supabase.instance.client.auth.currentUser?.id ??
+                              'N/A',
                         ),
                       ),
                       SizedBox(height: 24),

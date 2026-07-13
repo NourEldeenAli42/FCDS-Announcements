@@ -20,7 +20,7 @@ class PagesBloc extends Bloc<PagesEvent, PagesState> {
       } else if (event is FetchPagesEvent) {
         emit(SearchPagesLoading());
         final pages = await pagesRepository.fetchCourseSpecificPages(
-          event.courseName,
+          event.courseId,
         );
         emit(SearchPagesLoaded(pages));
       }

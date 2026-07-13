@@ -1,56 +1,55 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcds_announcements/FollowPageFeature/Data%20Models/course_data_model.dart';
 import 'package:fcds_announcements/FollowPageFeature/Data%20Models/page_data_model.dart';
 import 'package:fcds_announcements/utils/repositories/user_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PagesRepository {
-  final _db = FirebaseFirestore.instance;
+  final supabase = Supabase.instance.client;
   Future<List<CourseDataModel>> fetchAllCourses() async {
-    final querySnapshot = await _db.collection('courses').get();
-    return querySnapshot.docs
-        .map((doc) => CourseDataModel.fromDocument(doc.data()))
-        .toList();
+    final response = await supabase.from('courses').select();
+    return response.map((data) => CourseDataModel.fromDocument(data)).toList();
   }
 
-  Future<List<PageDataModel>> fetchCourseSpecificPages(
-    String courseName,
-  ) async {
-    final querySnapshot = await _db
-        .collection('courses')
-        .where('CourseName', isEqualTo: courseName)
-        .get();
-    final data = querySnapshot.docs.first.data();
-    final pagesData = data['Pages'] as List<dynamic>? ?? [];
-    UserRepository userRepository = UserRepository();
-    final followedPageIds = await userRepository.getFollowedPageIds();
-    return pagesData.map((pageMap) {
+  Future<List<PageDataModel>> fetchCourseSpecificPages(int courseId) async {
+    final response = await supabase
+        .from('pages')
+        .select('*, instructors(instructor_name)')
+        .eq('course_id', courseId);
+    final followedPageIds = await UserRepository.getFollowedPageIds();
+
+    return response.map((pageMap) {
+      pageMap['instructorName'] = pageMap['instructors']?['name'];
       pageMap['isFollowed'] = followedPageIds.contains(pageMap['id']);
       return PageDataModel.fromMap(pageMap);
     }).toList();
   }
 
-  Future<void> followPage({
-    required String userId,
-    required String pageName,
-  }) async {
-    FirebaseMessaging.instance.subscribeToTopic(pageName);
-    final userRef = _db.collection('users').doc(userId);
+  Future<void> followPage({required String userId, required int pageID}) async {
+    await FirebaseMessaging.instance.subscribeToTopic(pageID.toString());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(pageID.toString(), true);
 
-    await userRef.update({
-      'following': FieldValue.arrayUnion([pageName]),
+    final supabase = Supabase.instance.client;
+    await supabase.from('follows').insert({
+      'user_id': userId,
+      'page_id': pageID,
     });
   }
 
   Future<void> unfollowPage({
     required String userId,
-    required String pageName,
+    required int pageID,
   }) async {
-    FirebaseMessaging.instance.unsubscribeFromTopic(pageName);
-    final userRef = _db.collection('users').doc(userId);
-
-    await userRef.update({
-      'following': FieldValue.arrayRemove([pageName]),
-    });
+    await FirebaseMessaging.instance.unsubscribeFromTopic(pageID.toString());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(pageID.toString(), false);
+    final supabase = Supabase.instance.client;
+    await supabase
+        .from('follows')
+        .delete()
+        .eq('user_id', userId)
+        .eq('page_id', pageID);
   }
 }

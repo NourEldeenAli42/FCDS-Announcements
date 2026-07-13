@@ -14,7 +14,8 @@ final class FunctionButtonsReadLoading extends FunctionButtonsState {}
 final class FunctionButtonsReadLoaded extends FunctionButtonsState {
   final bool hasUnreadMessages;
   final bool hasUnreadMaterials = false;
-  const FunctionButtonsReadLoaded({this.hasUnreadMessages = false});
+  final bool isAdmin;
+  const FunctionButtonsReadLoaded({this.hasUnreadMessages = false, this.isAdmin = false});
 
   @override
   List<Object> get props => [hasUnreadMessages];

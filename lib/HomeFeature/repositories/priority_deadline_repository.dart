@@ -1,52 +1,23 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcds_announcements/HomeFeature/Models/priority_deadline_data_model.dart';
-
-const int _firestoreFilterValueLimit = 30;
-
-List<List<T>> _chunkList<T>(List<T> items, int chunkSize) {
-  final chunks = <List<T>>[];
-  for (int i = 0; i < items.length; i += chunkSize) {
-    final end = (i + chunkSize < items.length) ? i + chunkSize : items.length;
-    chunks.add(items.sublist(i, end));
-  }
-  return chunks;
-}
+import 'package:fcds_announcements/utils/repositories/user_repository.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PriorityDeadlineRepository {
-  final FirebaseFirestore _firestore;
-
-  PriorityDeadlineRepository({FirebaseFirestore? firestore})
-    : _firestore = firestore ?? FirebaseFirestore.instance;
-  final List<PriorityDeadlineDataModel> allDeadlines = [];
-  Future<List<PriorityDeadlineDataModel>> getPriorityDeadline(
-    List<String> followedPageIds,
-  ) async {
+  static Future<List<PriorityDeadlineDataModel>> getPriorityDeadline() async {
+    final followedPageIds = await UserRepository.getFollowedPageIds();
     if (followedPageIds.isEmpty) return [];
-
     final uniquePageIds = followedPageIds.toSet().toList();
+    final supabase = Supabase.instance.client;
+    final response = await supabase
+        .from('announcements')
+        .select()
+        .inFilter('page_id', uniquePageIds)
+        .gt('deadline', DateTime.now())
+        .order('created_at', ascending: false);
 
-    for (final pageChunk in _chunkList(
-      uniquePageIds,
-      _firestoreFilterValueLimit,
-    )) {
-      final query = await _firestore
-          .collection('announcements')
-          .where('page_id', whereIn: pageChunk)
-          .orderBy('deadline', descending: false)
-          .orderBy('post_time', descending: true)
-          .where('deadline', isGreaterThan: Timestamp.now())
-          .get();
-
-      if (query.docs.isEmpty) {
-        continue;
-      }
-
-      for (final candidate in query.docs) {
-        allDeadlines.add(
-          PriorityDeadlineDataModel.fromFirestore(candidate.data()),
-        );
-      }
-      return allDeadlines;
+    final allDeadlines = <PriorityDeadlineDataModel>[];
+    for (final candidate in response) {
+      allDeadlines.add(PriorityDeadlineDataModel.fromFirestore(candidate));
     }
     return allDeadlines;
   }

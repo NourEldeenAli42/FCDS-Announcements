@@ -7,7 +7,7 @@ sealed class SubjectTileEvent extends Equatable {
   List<Object> get props => [];
 }
 class LoadFollowedPagesofSubjectEvent extends SubjectTileEvent {
-  final String subjectId;
+  final int subjectId;
 
   const LoadFollowedPagesofSubjectEvent({required this.subjectId});
 

@@ -1,80 +1,53 @@
-import 'dart:async';
-import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcds_announcements/RecentMessagesFeature/repositories/notification_reciever_repository.dart';
 import 'package:fcds_announcements/RemindersFeature/repository/reminders_repository.dart';
-import 'package:fcds_announcements/utils/repositories/user_repository.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 
 class AuthRepository {
-  final _firebaseAuth = FirebaseAuth.instance;
-  Future<UserCredential?> signInWithGoogleWeb() async {
-    // Create a new provider
-    GoogleAuthProvider googleProvider = GoogleAuthProvider();
+  Future<void> nativeGoogleSignIn() async {
+    final supabase = Supabase.instance.client;
 
-    // Optional: Add custom parameters
-    googleProvider.setCustomParameters({'login_hint': 'user@example.com'});
+    const webClientId =
+        '921251262968-gmii2qoj9pdmsqcfaic7corl3pbru257.apps.googleusercontent.com';
 
-    try {
-      // Trigger the popup authentication flow
-      return await FirebaseAuth.instance.signInWithPopup(googleProvider);
-    } catch (e) {
-      log("Error during Google Sign-In: $e");
-      return null;
+    final scopes = ['email', 'profile'];
+    final googleSignIn = GoogleSignIn.instance;
+    await googleSignIn.initialize(serverClientId: webClientId);
+    final googleUser = await googleSignIn.attemptLightweightAuthentication();
+
+    if (googleUser == null) {
+      return;
     }
-  }
 
-  Future<User?> signInWithGoogle() async {
-    if (kIsWeb) {
-      final userCredential = await signInWithGoogleWeb();
-      return userCredential?.user;
+    /// Authorization is required to obtain the access token with the appropriate scopes for Supabase authentication,
+    /// while also granting permission to access user information.
+    final authorization =
+        await googleUser.authorizationClient.authorizationForScopes(scopes) ??
+        await googleUser.authorizationClient.authorizeScopes(scopes);
+    final idToken = googleUser.authentication.idToken;
+    if (idToken == null) {
+      throw AuthException('No ID Token found.');
     }
-    final signIn = GoogleSignIn.instance;
-    await signIn.initialize(
-      serverClientId: kIsWeb
-          ? null
-          : '921251262968-of783c602bmg7go184s7mpv0dmlnhinl.apps.googleusercontent.com',
-      clientId:
-          '921251262968-of783c602bmg7go184s7mpv0dmlnhinl.apps.googleusercontent.com',
+    await supabase.auth.signInWithIdToken(
+      provider: OAuthProvider.google,
+      idToken: idToken,
+      accessToken: authorization.accessToken,
     );
-    final user = await signIn.attemptLightweightAuthentication();
-    await FirebaseAuth.instance.signInWithCredential(
-      GoogleAuthProvider.credential(idToken: (user?.authentication)?.idToken),
-    );
-    final db = FirebaseFirestore.instance;
-    final userDoc = await db
-        .collection('users')
-        .doc(_firebaseAuth.currentUser!.uid)
-        .get();
-    if (!userDoc.exists) {
-      await db.collection('users').doc(_firebaseAuth.currentUser!.uid).set({
-        'name': _firebaseAuth.currentUser!.displayName,
-        'email': _firebaseAuth.currentUser!.email,
-        'following': ['welcoming'],
-      });
-    }
 
-    // Subscribe to topics for push notifications
-    List<String> followedPageIds = await UserRepository().getFollowedPageIds();
-    for (var pageId in followedPageIds) {
-      FirebaseMessaging.instance.subscribeToTopic(pageId);
-    }
-    return _firebaseAuth.currentUser;
+    // List<String> followedPageIds = await UserRepository().getFollowedPageIds();
+    // for (var pageId in followedPageIds) {
+    //   FirebaseMessaging.instance.subscribeToTopic(pageId);
+    // }
   }
 
   Future<void> signOut() async {
     await NotificationRepository().deleteAllMessages();
     RemindersRepository().flutterLocalNotificationsPlugin
         .cancelAllPendingNotifications();
-    List<String> followedPageIds = await UserRepository().getFollowedPageIds();
-    for (var pageId in followedPageIds) {
-      FirebaseMessaging.instance.unsubscribeFromTopic(pageId);
-    }
-    await FirebaseAuth.instance.signOut();
-    await _firebaseAuth.signOut();
-    await GoogleSignIn.instance.signOut();
+    // List<String> followedPageIds = await UserRepository.getFollowedPageIds();
+    // for (var pageId in followedPageIds) {
+    //   FirebaseMessaging.instance.unsubscribeFromTopic(pageId);
+    // }
+    await Supabase.instance.client.auth.signOut();
   }
 }
