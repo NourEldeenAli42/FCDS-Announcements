@@ -36,7 +36,9 @@ void main() async {
   await initSupabase();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseAppCheck.instance.activate(
-    providerAndroid: AndroidDebugProvider(),
+    providerAndroid: AndroidDebugProvider(
+      
+    ),
     providerWeb: ReCaptchaV3Provider(
       '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
     ),
