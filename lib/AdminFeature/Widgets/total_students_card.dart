@@ -10,7 +10,7 @@ class TotalStudentsCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 54, 125, 101),
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(

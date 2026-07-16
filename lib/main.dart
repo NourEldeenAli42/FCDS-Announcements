@@ -17,6 +17,7 @@ import 'package:fcds_announcements/RemindersFeature/bloc/Reminders%20Bloc/remind
 import 'package:fcds_announcements/utils/AI%20Model/core_model.dart';
 import 'package:fcds_announcements/utils/app_keys.dart';
 import 'package:fcds_announcements/utils/supabase.dart';
+import 'package:fcds_announcements/utils/theme/app_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
@@ -29,6 +30,8 @@ import 'firebase_options.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:fcds_announcements/utils/repositories/firebase_messaging_repository.dart';
 
+import 'package:fcds_announcements/utils/theme/theme_cubit.dart';
+
 late final bool firstTimeUser;
 
 void main() async {
@@ -36,9 +39,7 @@ void main() async {
   await initSupabase();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseAppCheck.instance.activate(
-    providerAndroid: AndroidDebugProvider(
-      
-    ),
+    providerAndroid: AndroidDebugProvider(),
     providerWeb: ReCaptchaV3Provider(
       '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
     ),
@@ -53,41 +54,57 @@ void main() async {
   AIModel.initialize();
   final prefs = await SharedPreferences.getInstance();
   firstTimeUser = prefs.getBool('firstTimeUser') ?? true;
-  runApp(const MyApp());
+
+  // Load saved theme settings before running the app
+  final themeState = await ThemeCubit.loadThemeSettings();
+
+  runApp(MyApp(initialThemeState: themeState));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final ThemeState initialThemeState;
+
+  const MyApp({super.key, required this.initialThemeState});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      scaffoldMessengerKey: scaffoldMessengerKey,
-      routes: {
-        '/home': (context) => HomeView(),
-        '/messages': (context) => MessagesView(),
-        '/profile': (context) => ProfileView(),
-        '/feed': (context) => PageFeedView(pageId: 0),
-        '/admin': (context) => AdminView(),
-        '/auth': (context) => AuthWrapper(),
-        '/users': (context) => ManageUsersView(),
-        '/permissions': (context) => PermessionsView(),
-        '/manage_courses': (context) => BlocProvider<ManageCoursesBloc>(
-          create: (context) => ManageCoursesBloc()..add(LoadCourses()),
-          child: ManageCoursesView(),
-        ),
-        '/manage_subjects': (context) => BlocProvider(
-          create: (context) => ManagePagesBloc()..add(LoadPagesEvent()),
-          child: ManagePagesView(),
-        ),
-      },
-      title: 'FCDS Announcements',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.tealAccent),
+    return BlocProvider(
+      create: (context) => ThemeCubit(
+        initialThemeType: initialThemeState.themeType,
+        initialThemeMode: initialThemeState.themeMode,
       ),
-      home: firstTimeUser ? const HostScreen() : const AuthWrapper(),
+      child: BlocBuilder<ThemeCubit, ThemeState>(
+        builder: (context, state) {
+          return MaterialApp(
+            navigatorKey: navigatorKey,
+            scaffoldMessengerKey: scaffoldMessengerKey,
+            routes: {
+              '/home': (context) => HomeView(),
+              '/messages': (context) => MessagesView(),
+              '/profile': (context) => ProfileView(),
+              '/feed': (context) => PageFeedView(pageId: 0),
+              '/admin': (context) => AdminView(),
+              '/auth': (context) => AuthWrapper(),
+              '/users': (context) => ManageUsersView(),
+              '/permissions': (context) => PermessionsView(),
+              '/manage_courses': (context) => BlocProvider<ManageCoursesBloc>(
+                create: (context) => ManageCoursesBloc()..add(LoadCourses()),
+                child: ManageCoursesView(),
+              ),
+              '/manage_subjects': (context) => BlocProvider(
+                create: (context) => ManagePagesBloc()..add(LoadPagesEvent()),
+                child: ManagePagesView(),
+              ),
+            },
+            title: 'FCDS Announcements',
+            theme: AppTheme.getTheme(state.themeType, Brightness.light),
+            darkTheme: AppTheme.getTheme(state.themeType, Brightness.dark),
+            themeMode: state.themeMode,
+            home: firstTimeUser ? const HostScreen() : const AuthWrapper(),
+          );
+        },
+      ),
     );
   }
 }

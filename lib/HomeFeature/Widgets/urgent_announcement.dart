@@ -34,6 +34,19 @@ class UrgentAnnouncement extends StatefulWidget {
     this.notificationEnabled = true,
   });
 
+  UrgentAnnouncement.empty({
+    super.key,
+    this.chipText = '   ',
+    this.titleText = '    ',
+    this.bodyText = '   ',
+    this.timeText = '   ',
+    this.pageId = 0,
+    this.redirectLink = '   ',
+    this.isEditing = false,
+    this.onSubmit,
+    this.notificationEnabled = true,
+  });
+
   UrgentAnnouncement.editing({super.key, this.onSubmit})
     : chipText = '',
       titleText = '',
@@ -67,7 +80,7 @@ class _UrgentAnnouncementState extends State<UrgentAnnouncement> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 54, 125, 101),
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(25),
       ),
       padding: .all(32),
@@ -84,11 +97,17 @@ class _UrgentAnnouncementState extends State<UrgentAnnouncement> {
                         child: TextField(
                           maxLength: 15,
                           controller: chipController,
-                          style: MyTextStyle(color: Colors.white),
-                          decoration: const InputDecoration(
+                          style: MyTextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                          decoration: InputDecoration(
                             counterText: '',
                             hintText: 'Enter chip text',
-                            hintStyle: TextStyle(color: Colors.white70),
+                            hintStyle: TextStyle(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onPrimary.withValues(alpha: 0.7),
+                            ),
                             border: InputBorder.none,
                             isDense: true,
                             contentPadding: EdgeInsets.zero,
@@ -98,8 +117,17 @@ class _UrgentAnnouncementState extends State<UrgentAnnouncement> {
                           maxLengthEnforcement: null,
                         ),
                       )
-                    : Text(widget.chipText),
-                backgroundColor: Color(0xEE5e9784),
+                    : Text(
+                        widget.chipText,
+                        style: TextStyle(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onPrimaryContainer,
+                        ),
+                      ),
+                backgroundColor: Theme.of(
+                  context,
+                ).colorScheme.primaryContainer.withValues(alpha: 0.8),
                 shape: StadiumBorder(),
                 side: BorderSide(color: Colors.transparent),
               ),
@@ -114,11 +142,16 @@ class _UrgentAnnouncementState extends State<UrgentAnnouncement> {
                       icon: Icon(
                         Icons.campaign,
                         color: widget.notificationEnabled
-                            ? Colors.white
-                            : Colors.white38,
+                            ? Theme.of(context).colorScheme.onPrimary
+                            : Theme.of(
+                                context,
+                              ).colorScheme.onPrimary.withValues(alpha: 0.38),
                       ),
                     )
-                  : Icon(Icons.campaign, color: Colors.white),
+                  : Icon(
+                      Icons.campaign,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
             ],
           ),
           widget.isEditing
@@ -129,14 +162,18 @@ class _UrgentAnnouncementState extends State<UrgentAnnouncement> {
                       maxLength: 30,
                       controller: titleController,
                       style: MyTextStyle(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onPrimary,
                         fontSize: 20,
-                        fontWeight: .bold,
+                        fontWeight: FontWeight.bold,
                       ),
                       decoration: InputDecoration(
                         counterText: '',
                         hintText: 'Enter title',
-                        hintStyle: MyTextStyle(color: Colors.white70),
+                        hintStyle: MyTextStyle(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onPrimary.withValues(alpha: 0.7),
+                        ),
                         border: InputBorder.none,
                         isDense: true,
                         contentPadding: EdgeInsets.zero,
@@ -146,11 +183,18 @@ class _UrgentAnnouncementState extends State<UrgentAnnouncement> {
                     ),
                     TextField(
                       controller: bodyController,
-                      style: MyTextStyle(color: Colors.white, fontSize: 16),
-                      decoration: const InputDecoration(
+                      style: MyTextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontSize: 16,
+                      ),
+                      decoration: InputDecoration(
                         counterText: '',
                         hintText: 'Enter Announcement Content',
-                        hintStyle: TextStyle(color: Colors.white38),
+                        hintStyle: TextStyle(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onPrimary.withValues(alpha: 0.38),
+                        ),
                         border: InputBorder.none,
                         isDense: true,
                         contentPadding: EdgeInsets.zero,
@@ -166,14 +210,17 @@ class _UrgentAnnouncementState extends State<UrgentAnnouncement> {
                       TextSpan(
                         text: '${widget.titleText}\n',
                         style: MyTextStyle(
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.onPrimary,
                           fontSize: 20,
-                          fontWeight: .bold,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       TextSpan(
                         text: widget.bodyText,
-                        style: MyTextStyle(color: Colors.white, fontSize: 16),
+                        style: MyTextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontSize: 16,
+                        ),
                       ),
                     ],
                   ),
@@ -183,11 +230,22 @@ class _UrgentAnnouncementState extends State<UrgentAnnouncement> {
             mainAxisAlignment: .start,
             mainAxisSize: .min,
             children: [
-              Icon(Icons.access_time, color: Colors.white70, size: 16),
+              Icon(
+                Icons.access_time,
+                color: Theme.of(
+                  context,
+                ).colorScheme.onPrimary.withValues(alpha: 0.7),
+                size: 16,
+              ),
               SizedBox(width: 4),
               Text(
                 'Posted ${widget.isEditing ? 'Now' : widget.timeText}',
-                style: MyTextStyle(color: Colors.white70, fontSize: 14),
+                style: MyTextStyle(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onPrimary.withValues(alpha: 0.7),
+                  fontSize: 14,
+                ),
               ),
             ],
           ),
@@ -255,7 +313,10 @@ class _UrgentAnnouncementState extends State<UrgentAnnouncement> {
                       );
                     }
                   },
-                  icon: Icon(Icons.link, color: Colors.white),
+                  icon: Icon(
+                    Icons.link,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
                 ),
 
               if (!widget.isEditing && widget.redirectLink.isNotEmpty)
@@ -264,7 +325,10 @@ class _UrgentAnnouncementState extends State<UrgentAnnouncement> {
                     final url = Uri.parse(widget.redirectLink);
                     launchUrl(url, mode: LaunchMode.externalApplication);
                   },
-                  icon: Icon(Icons.link, color: Colors.white),
+                  icon: Icon(
+                    Icons.link,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
                 ),
             ],
           ),

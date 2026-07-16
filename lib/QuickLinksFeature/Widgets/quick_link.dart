@@ -29,9 +29,9 @@ class QuickLink extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               icon is IconData
-                  ? Icon(icon, size: 40, color: Colors.teal)
+                  ? Icon(icon, size: 40, color: Theme.of(context).colorScheme.primary)
                   : icon is FaIconData
-                  ? FaIcon(icon, size: 40, color: Colors.teal)
+                  ? FaIcon(icon, size: 40, color: Theme.of(context).colorScheme.primary)
                   : icon,
               SizedBox(height: 8),
               Text(title, style: MyTextStyle(fontSize: 18, fontWeight: .bold)),

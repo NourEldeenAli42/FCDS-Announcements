@@ -1,3 +1,4 @@
+import 'package:fcds_announcements/FollowPageFeature/Data%20Models/course_data_model.dart';
 import 'package:fcds_announcements/SubjectsFeature/Widgets/subject_tile.dart';
 import 'package:fcds_announcements/SubjectsFeature/bloc/Subject%20Tile%20Bloc/subject_tile_bloc.dart';
 import 'package:fcds_announcements/SubjectsFeature/bloc/Subjects%20Bloc/subjects_bloc.dart';
@@ -5,6 +6,7 @@ import 'package:fcds_announcements/utils/Widgets/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class SubjectsView extends StatelessWidget {
   const SubjectsView({super.key});
@@ -32,21 +34,11 @@ class SubjectsView extends StatelessWidget {
               BlocBuilder<SubjectsBloc, SubjectsState>(
                 builder: (context, state) {
                   return switch (state) {
-                    SubjectsInitial() ||
-                    SubjectsLoading() => Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-                      highlightColor: Colors.grey.shade100,
-                      child: Card(
-                        margin: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Container(
-                          margin: .only(bottom: 16),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            color: Colors.white,
-                          ),
-                          padding: .all(16),
-                          width: double.infinity,
-                          height: 80,
+                    SubjectsInitial() || SubjectsLoading() => Skeletonizer.zone(
+                      child: Column(
+                        children: List.generate(
+                          3,
+                          (index) => const SubjectTile.empty(),
                         ),
                       ),
                     ),

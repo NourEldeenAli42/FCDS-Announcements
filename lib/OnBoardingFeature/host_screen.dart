@@ -44,7 +44,7 @@ class _HostScreenState extends State<HostScreen> {
           style: MyTextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 54, 125, 101),
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
       ),
@@ -88,7 +88,7 @@ class _HostScreenState extends State<HostScreen> {
                   effect: SwapEffect(
                     dotWidth: 8,
                     dotHeight: 8,
-                    activeDotColor: Color.fromARGB(255, 54, 125, 101),
+                    activeDotColor: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 FilledButton(

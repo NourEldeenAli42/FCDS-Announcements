@@ -26,8 +26,8 @@ class MessagesView extends StatelessWidget {
                     'Mark all read',
                     style: MyTextStyle(
                       fontSize: 16,
-                      color: Color.fromARGB(255, 54, 125, 101),
-                      fontWeight: .w700,
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 );
@@ -44,15 +44,15 @@ class MessagesView extends StatelessWidget {
                   Icon(
                     Icons.arrow_back_ios,
                     size: 16,
-                    color: const Color.fromARGB(255, 54, 125, 101),
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   SizedBox(width: 4),
                   Text(
                     'Back',
                     style: MyTextStyle(
                       fontSize: 16,
-                      color: const Color.fromARGB(255, 54, 125, 101),
-                      fontWeight: .w700,
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ],
@@ -74,7 +74,7 @@ class MessagesView extends StatelessWidget {
                 builder: (context, state) {
                   return Container(
                     decoration: BoxDecoration(
-                      color: Colors.teal[100],
+                      color: Theme.of(context).colorScheme.primaryContainer,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     margin: .symmetric(vertical: 12),
@@ -115,7 +115,7 @@ class MessagesView extends StatelessWidget {
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(
-                            color: Color.fromARGB(255, 54, 125, 101),
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       );
@@ -179,7 +179,7 @@ class MessagesView extends StatelessWidget {
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(
-                            color: Color.fromARGB(255, 54, 125, 101),
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       );

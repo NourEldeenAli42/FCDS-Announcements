@@ -42,7 +42,6 @@ class PageFeedView extends StatelessWidget {
                     Navigator.pop(context);
                   },
                   icon: Icon(Icons.arrow_back_ios_new),
-                  color: Color.fromARGB(255, 34, 125, 109),
                 ),
               ),
               floatingActionButton: BlocBuilder(

@@ -13,6 +13,10 @@ class SubjectTile extends StatelessWidget {
   const SubjectTile({
     super.key,
     required this.subject,
+  });
+  const SubjectTile.empty({
+    super.key,
+    this.subject = const CourseDataModel.empty(),
     this.color = Colors.blue,
   });
 
@@ -73,93 +77,104 @@ class SubjectTile extends StatelessWidget {
                             'No followed pages for this subject.',
                             style: MyTextStyle(color: Colors.grey[600]),
                           )
-                        : Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
 
-                            children: pages
-                                .map(
-                                  (page) => ListTile(
-                                    subtitle: Wrap(
-                                      children: [
-                                        for (var tag in [
-                                          page.hall,
-                                          page.instructor,
-                                          page.startTime.format(context),
-                                        ])
-                                          Container(
-                                            margin: EdgeInsets.only(
-                                              right: 6,
-                                              top: 4,
-                                            ),
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 8,
-                                              vertical: 4,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: Colors.blueGrey.shade100,
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Icon(
-                                                  Icons.circle,
-                                                  size: 8,
+                              children: pages
+                                  .map(
+                                    (page) => Container(
+                                      margin: EdgeInsets.symmetric(vertical: 4),
+                                      child: ListTile(
+                                        subtitle: Wrap(
+                                          children: [
+                                            for (var tag in [
+                                              page.hall,
+                                              page.instructor,
+                                              page.startTime.format(context),
+                                            ])
+                                              Container(
+                                                margin: EdgeInsets.only(
+                                                  right: 6,
+                                                  top: 4,
+                                                ),
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 8,
+                                                  vertical: 4,
+                                                ),
+                                                decoration: BoxDecoration(
                                                   color:
-                                                      Colors.blueGrey.shade800,
+                                                      Colors.blueGrey.shade100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
                                                 ),
-                                                SizedBox(width: 4),
-                                                Text(
-                                                  tag,
-                                                  style: MyTextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors
-                                                        .blueGrey
-                                                        .shade800,
-                                                  ),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.circle,
+                                                      size: 8,
+                                                      color: Colors
+                                                          .blueGrey
+                                                          .shade800,
+                                                    ),
+                                                    SizedBox(width: 4),
+                                                    Text(
+                                                      tag,
+                                                      style: MyTextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors
+                                                            .blueGrey
+                                                            .shade800,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
+                                              ),
+                                          ],
+                                        ),
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PageFeedView(pageId: page.id),
                                             ),
+                                          );
+                                        },
+                                        trailing: Wrap(
+                                          children: [
+                                            Icon(
+                                              Icons.arrow_forward_ios_rounded,
+                                              size: 16,
+                                              color: Colors.grey.shade700,
+                                            ),
+                                          ],
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
                                           ),
-                                      ],
-                                    ),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              PageFeedView(pageId: page.id),
+                                          side: BorderSide(
+                                            color: Colors.grey.shade300,
+                                          ),
                                         ),
-                                      );
-                                    },
-                                    trailing: Wrap(
-                                      children: [
-                                        Icon(
-                                          Icons.arrow_forward_ios_rounded,
-                                          size: 16,
-                                          color: Colors.grey.shade700,
-                                        ),
-                                      ],
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      side: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      ),
-                                    ),
 
-                                    title: Text(
-                                      page.title,
-                                      style: MyTextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500,
+                                        title: Text(
+                                          page.title,
+                                          style: MyTextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                )
-                                .toList(),
+                                  )
+                                  .toList(),
+                            ),
                           ),
                   FollowedPagesError(:final message) => Text(
                     'Error: $message',

@@ -27,7 +27,7 @@ class FirstScreen extends StatelessWidget {
               'Get real-time updates and academic announcements directly from your institution.',
               style: MyTextStyle(
                 fontSize: 16,
-                color: Color.fromARGB(255, 54, 125, 101),
+                color: Theme.of(context).colorScheme.primary,
               ),
               textAlign: .center,
             ),

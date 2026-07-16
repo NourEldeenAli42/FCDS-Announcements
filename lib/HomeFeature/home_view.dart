@@ -11,7 +11,7 @@ import 'package:fcds_announcements/SubjectsFeature/Widgets/add_reminder_form.dar
 import 'package:fcds_announcements/utils/repositories/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -52,26 +52,8 @@ class HomeView extends StatelessWidget {
                             if (state is AnnouncementLoading) {
                               return Container(
                                 margin: .only(bottom: 16, top: 16),
-                                child: Shimmer.fromColors(
-                                  baseColor: Colors.grey.shade300,
-                                  highlightColor: Colors.grey.shade100,
-                                  child: Card(
-                                    margin: EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                    ),
-                                    child: Container(
-                                      margin: .only(bottom: 16),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                          8.0,
-                                        ),
-                                        color: Colors.white,
-                                      ),
-                                      padding: .all(16),
-                                      width: double.infinity,
-                                      height: 100,
-                                    ),
-                                  ),
+                                child: Skeletonizer(
+                                  child: UrgentAnnouncement.empty(),
                                 ),
                               );
                             } else if (state is AnnouncementLoaded) {
@@ -101,24 +83,8 @@ class HomeView extends StatelessWidget {
                         >(
                           builder: (context, state) {
                             if (state is PriorityDeadlineLoading) {
-                              return Shimmer.fromColors(
-                                baseColor: Colors.grey.shade300,
-                                highlightColor: Colors.grey.shade100,
-                                child: Card(
-                                  margin: EdgeInsets.symmetric(
-                                    horizontal: 16.0,
-                                  ),
-                                  child: Container(
-                                    margin: .only(bottom: 16),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      color: Colors.white,
-                                    ),
-                                    padding: .all(16),
-                                    width: double.infinity,
-                                    height: 80,
-                                  ),
-                                ),
+                              return Skeletonizer.zone(
+                                child: PriorityDeadlineCard.empty(),
                               );
                             } else if (state is PriorityDeadlineLoaded) {
                               final priorityDeadline = state.priorityDeadline;
@@ -152,7 +118,9 @@ class HomeView extends StatelessWidget {
                                     hasUnread: state.hasUnreadMessages,
                                     icon: Icons.messenger_outline_sharp,
                                     label: 'Messages',
-                                    color: Colors.purple,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
                                     onTap: () {
                                       Navigator.pushNamed(context, '/messages');
                                     },
@@ -161,7 +129,9 @@ class HomeView extends StatelessWidget {
                                   return FunctionCard(
                                     icon: Icons.messenger_outline_sharp,
                                     label: 'Messages',
-                                    color: Colors.purple,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
                                     onTap: () {
                                       Navigator.pushNamed(context, '/messages');
                                     },
@@ -175,7 +145,7 @@ class HomeView extends StatelessWidget {
                         FunctionCard(
                           icon: Icons.alarm,
                           label: 'Set Reminder',
-                          color: Colors.orange,
+                          color: Theme.of(context).colorScheme.tertiary,
                           onTap: () {
                             showDialog(
                               context: context,
@@ -197,7 +167,7 @@ class HomeView extends StatelessWidget {
                                 hasUnread: false,
                                 icon: Icons.admin_panel_settings,
                                 label: 'Admin Panel',
-                                color: Colors.red,
+                                color: Theme.of(context).colorScheme.error,
                                 onTap: () {
                                   Navigator.pushNamed(context, '/admin');
                                 },

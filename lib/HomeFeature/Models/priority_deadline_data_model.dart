@@ -4,7 +4,10 @@ class PriorityDeadlineDataModel {
   final String title;
   final String remainingTime;
 
-  PriorityDeadlineDataModel({required this.title, required this.remainingTime});
+  const PriorityDeadlineDataModel({
+    required this.title,
+    required this.remainingTime,
+  });
   factory PriorityDeadlineDataModel.fromFirestore(Map<String, dynamic> data) {
     final timeText = Dateformatter.formatDuration(
       DateTime.parse(data['deadline']).difference(DateTime.now()),

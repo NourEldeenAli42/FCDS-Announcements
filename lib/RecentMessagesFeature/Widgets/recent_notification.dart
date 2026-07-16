@@ -6,57 +6,59 @@ import 'package:flutter/material.dart';
 
 class RecentNotification extends StatelessWidget {
   final NotificationItemDataModel? notification;
-  final Color color;
+  final Color? color;
   const RecentNotification({
     super.key,
     required this.notification,
-    this.color = const Color.fromARGB(255, 54, 125, 101),
+    this.color,
   });
+
   @override
   Widget build(BuildContext context) {
+    final activeColor = color ?? Theme.of(context).colorScheme.primary;
     return Container(
-      padding: .all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardTheme.color ?? Theme.of(context).colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(8.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withAlpha(100),
+            color: Colors.black.withAlpha(20),
             spreadRadius: 1,
             blurRadius: 5,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: const Offset(0, 3),
           ),
         ],
       ),
-      margin: .symmetric(vertical: 8),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        crossAxisAlignment: .start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Unread(
             isUnread: !(notification?.isRead ?? true),
             child: Container(
               decoration: BoxDecoration(
-                color: color.computeLuminance() < 0.5
-                    ? color.withValues(alpha: 0.2)
-                    : color.withValues(alpha: 0.6),
+                color: activeColor.computeLuminance() < 0.5
+                    ? activeColor.withValues(alpha: 0.2)
+                    : activeColor.withValues(alpha: 0.6),
                 borderRadius: BorderRadius.circular(15),
               ),
-              padding: .all(8),
-              child: Icon(Icons.notifications, color: color),
+              padding: const EdgeInsets.all(8),
+              child: Icon(Icons.notifications, color: activeColor),
             ),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
-              crossAxisAlignment: .start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  mainAxisAlignment: .spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: Text(
                         notification?.title ?? 'No Title',
-                        style: MyTextStyle(fontSize: 16, fontWeight: .bold),
+                        style: MyTextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Text(
@@ -65,19 +67,19 @@ class RecentNotification extends StatelessWidget {
                       ),
                       style: MyTextStyle(
                         fontSize: 14,
-                        color: Color.fromARGB(255, 135, 163, 153),
-                        fontWeight: .w400,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   notification?.body ?? 'No Body',
                   style: MyTextStyle(
                     fontSize: 14,
-                    color: Color.fromARGB(255, 135, 163, 153),
-                    fontWeight: .w400,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ],
