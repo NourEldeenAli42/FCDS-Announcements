@@ -13,6 +13,7 @@ class SubjectTile extends StatelessWidget {
   const SubjectTile({
     super.key,
     required this.subject,
+    this.color = Colors.blue,
   });
   const SubjectTile.empty({
     super.key,

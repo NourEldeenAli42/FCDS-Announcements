@@ -1,11 +1,9 @@
-import 'package:fcds_announcements/FollowPageFeature/Data%20Models/course_data_model.dart';
 import 'package:fcds_announcements/SubjectsFeature/Widgets/subject_tile.dart';
 import 'package:fcds_announcements/SubjectsFeature/bloc/Subject%20Tile%20Bloc/subject_tile_bloc.dart';
 import 'package:fcds_announcements/SubjectsFeature/bloc/Subjects%20Bloc/subjects_bloc.dart';
 import 'package:fcds_announcements/utils/Widgets/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class SubjectsView extends StatelessWidget {
@@ -35,6 +33,7 @@ class SubjectsView extends StatelessWidget {
                 builder: (context, state) {
                   return switch (state) {
                     SubjectsInitial() || SubjectsLoading() => Skeletonizer.zone(
+
                       child: Column(
                         children: List.generate(
                           3,
