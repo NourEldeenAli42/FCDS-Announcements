@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crystal_navigation_bar/crystal_navigation_bar.dart';
 import 'package:fcds_announcements/FollowPageFeature/search_courses.dart';
@@ -9,8 +11,10 @@ import 'package:fcds_announcements/SubjectsFeature/Widgets/add_reminder_form.dar
 import 'package:fcds_announcements/SubjectsFeature/subjects_view.dart';
 import 'package:fcds_announcements/SubjectsFeature/bloc/Subjects%20Bloc/subjects_bloc.dart';
 import 'package:fcds_announcements/generated/assets.dart';
+import 'package:fcds_announcements/utils/AI%20Model/core_model.dart';
 import 'package:fcds_announcements/utils/date_formatter.dart';
 import 'package:fcds_announcements/utils/Widgets/text_style.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -66,8 +70,11 @@ class _MainViewState extends State<MainView> {
               onPressed: () {
                 showSearch(context: context, delegate: SearchCourses());
               },
-              backgroundColor: Color.fromARGB(255, 54, 125, 101),
-              child: Icon(Icons.add, color: Colors.white),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              child: Icon(
+                Icons.add,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             )
           : _currentIndex == 2
           ? FloatingActionButton(
@@ -88,8 +95,24 @@ class _MainViewState extends State<MainView> {
                   },
                 );
               },
-              backgroundColor: Color.fromARGB(255, 54, 125, 101),
-              child: Icon(Icons.notification_add, color: Colors.white),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              child: Icon(
+                Icons.notification_add,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+            )
+          : _currentIndex == 0
+          ? FloatingActionButton(
+              onPressed: () async {
+                final result = await FilePicker.pickFiles(allowMultiple: false);
+                final file = File(result!.files.first.path!);
+                final text = await AIModel.generateText(
+                  'List Contents of this PDF',
+                  file.readAsBytesSync(),
+                );
+                showAboutDialog(context: context, children: [Text(text)]);
+              },
+              child: Icon(Icons.add),
             )
           : null,
       bottomNavigationBar: Padding(
@@ -134,7 +157,7 @@ class _MainViewState extends State<MainView> {
             CrystalNavigationBarItem(
               icon: Icons.alarm,
               unselectedIcon: Icons.alarm,
-              selectedColor: Color.fromARGB(255, 54, 125, 101),
+              selectedColor: Theme.of(context).colorScheme.primary,
             ),
 
             /// Links
@@ -154,14 +177,17 @@ class _MainViewState extends State<MainView> {
             children: [
               TextSpan(
                 text: Dateformatter.formatDate(DateTime.now()),
-                style: MyTextStyle(fontSize: 14, color: Color(0xFF608579)),
+                style: MyTextStyle(
+                  fontSize: 14,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
               TextSpan(
                 text: 'Good ${Dateformatter.getDayTime(DateTime.now())}, \n',
                 style: MyTextStyle(
-                  color: Color(0xFF111815),
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 20,
-                  fontWeight: .bold,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               TextSpan(
@@ -175,9 +201,9 @@ class _MainViewState extends State<MainView> {
                         ?.userMetadata?['full_name'] ??
                     'User',
                 style: MyTextStyle(
-                  color: Color(0xFF111815),
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 18,
-                  fontWeight: .bold,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
@@ -221,37 +247,21 @@ class _MainViewState extends State<MainView> {
                         ),
                       );
 
-                return Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.blue, width: 2.5),
-                      ),
-                      child: CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Colors.grey[300],
-                        child: avatar,
-                      ),
+                return Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 2.5,
                     ),
-                    Positioned(
-                      bottom: -2,
-                      right: -2,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.grey[800],
-                          border: Border.all(color: Colors.white, width: 2),
-                        ),
-                        padding: EdgeInsets.all(4),
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.white,
-                          size: 12,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest,
+                    child: avatar,
+                  ),
                 );
               },
             ),

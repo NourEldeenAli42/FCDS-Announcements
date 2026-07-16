@@ -56,7 +56,7 @@ class _ManageCoursesViewState extends State<ManageCoursesView>
       child: Scaffold(
         appBar: AppBar(title: Text('Manage Courses'), centerTitle: true),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Color.fromARGB(255, 54, 125, 101),
+          backgroundColor: Theme.of(context).colorScheme.primary,
           child: Icon(Icons.add, color: Colors.white),
           onPressed: () {
             showAdaptiveDialog(

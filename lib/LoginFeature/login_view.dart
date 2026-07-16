@@ -21,11 +21,11 @@ class LoginView extends StatelessWidget {
           body: Column(
             mainAxisAlignment: .center,
             children: [
-              const Center(
+              Center(
                 child: Image(
-                  image: AssetImage('assets/hat.png'),
+                  image: const AssetImage('assets/hat.png'),
                   height: 50,
-                  color: Color.fromARGB(255, 54, 125, 101),
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
               const SizedBox(height: 30),
@@ -40,19 +40,19 @@ class LoginView extends StatelessWidget {
                 'Student Portal Login',
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
-                  fontWeight: .w500,
-                  color: Color(0xFF608579),
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
               const SizedBox(height: 40),
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withValues(alpha: 0.3),
+                      color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.1),
                       spreadRadius: 2,
                       blurRadius: 5,
                       offset: const Offset(0, 3),
@@ -97,15 +97,15 @@ class LoginView extends StatelessWidget {
                                       text: 'Your account has been ',
                                       style: MyTextStyle(
                                         fontSize: 14,
-                                        color: Colors.black,
+                                        color: Theme.of(context).colorScheme.onSurface,
                                       ),
                                       children: [
                                         TextSpan(
                                           text: 'banned',
                                           style: MyTextStyle(
                                             fontSize: 14,
-                                            color: Colors.red,
-                                            fontWeight: .bold,
+                                            color: Theme.of(context).colorScheme.error,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         TextSpan(
@@ -113,7 +113,7 @@ class LoginView extends StatelessWidget {
                                               ' from accessing the FCDS Announcements app. Please contact the administrator for more information.',
                                           style: MyTextStyle(
                                             fontSize: 14,
-                                            color: Colors.black,
+                                            color: Theme.of(context).colorScheme.onSurface,
                                           ),
                                         ),
                                       ],
@@ -147,7 +147,8 @@ class LoginView extends StatelessWidget {
                                   );
                                 },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF367D65),
+                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            foregroundColor: Theme.of(context).colorScheme.onPrimary,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 50,
                               vertical: 15,
@@ -180,14 +181,14 @@ class LoginView extends StatelessWidget {
                   text: 'By signing in, you agree to our ',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 12,
-                    color: Color(0xFF608579),
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
                   ),
                   children: [
                     TextSpan(
                       text: 'Terms of Service',
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
-                        color: Color(0xFF608579),
+                        color: Theme.of(context).colorScheme.primary,
                         decoration: TextDecoration.underline,
                       ),
                       recognizer: TapGestureRecognizer()
@@ -199,14 +200,14 @@ class LoginView extends StatelessWidget {
                       text: ' and ',
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
-                        color: Color(0xFF608579),
+                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
                       ),
                     ),
                     TextSpan(
                       text: 'Privacy Policy',
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
-                        color: Color(0xFF608579),
+                        color: Theme.of(context).colorScheme.primary,
                         decoration: TextDecoration.underline,
                       ),
                       recognizer: TapGestureRecognizer()

@@ -89,7 +89,7 @@ class _ManageUsersViewState extends State<ManageUsersView>
                       leading: Icon(Icons.search, color: Colors.grey),
                       side: WidgetStateProperty.all(
                         BorderSide(
-                          color: Color.fromARGB(255, 54, 125, 101),
+                          color: Theme.of(context).colorScheme.primary,
                           width: 2,
                         ),
                       ),

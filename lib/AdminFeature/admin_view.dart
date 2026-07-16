@@ -15,7 +15,7 @@ class AdminView extends StatelessWidget {
             FunctionCard(
               icon: Icons.verified_user,
               label: 'Manage Users',
-              color: Color.fromARGB(255, 54, 125, 101),
+              color: Theme.of(context).colorScheme.primary,
               onTap: () {
                 Navigator.pushNamed(context, '/users');
               },

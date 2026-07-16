@@ -18,11 +18,11 @@ class Unread extends StatelessWidget {
                   width: 10,
                   height: 10,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFD700),
+                    color: Theme.of(context).colorScheme.tertiary,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFFFD700).withValues(alpha: 60),
+                        color: Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.2),
                         blurRadius: 8,
                         spreadRadius: 2,
                       ),

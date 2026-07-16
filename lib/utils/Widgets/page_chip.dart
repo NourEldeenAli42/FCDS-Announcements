@@ -11,17 +11,17 @@ class PageChip extends StatelessWidget {
       margin: EdgeInsets.only(right: 6, top: 4),
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.blueGrey.shade100,
+        color: Theme.of(context).colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.circle, size: 8, color: Colors.blueGrey.shade800),
+          Icon(Icons.circle, size: 8, color: Theme.of(context).colorScheme.onSecondaryContainer),
           SizedBox(width: 4),
           Text(
             tag,
-            style: MyTextStyle(fontSize: 12, color: Colors.blueGrey.shade800),
+            style: MyTextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSecondaryContainer),
           ),
         ],
       ),

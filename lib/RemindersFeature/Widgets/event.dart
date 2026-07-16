@@ -21,7 +21,7 @@ class Event extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundColor: Colors.teal.withAlpha(150),
+                  backgroundColor: Theme.of(context).colorScheme.primary.withAlpha(150),
                   child: Icon(Icons.event, color: Colors.white),
                 ),
                 SizedBox(width: 12),

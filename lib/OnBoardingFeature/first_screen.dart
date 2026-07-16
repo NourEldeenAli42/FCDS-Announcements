@@ -25,7 +25,7 @@ class _FirstScreenState extends State<FirstScreen> {
           style: MyTextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 54, 125, 101),
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
       ),

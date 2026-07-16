@@ -67,7 +67,7 @@ class _NotificationExampleState extends State<NotificationExample> {
                   Container(
                     padding: EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
-                      color: Colors.teal.withAlpha(50),
+                      color: Theme.of(context).colorScheme.primary.withAlpha(50),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(

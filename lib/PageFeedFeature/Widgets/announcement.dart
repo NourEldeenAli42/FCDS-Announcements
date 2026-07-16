@@ -88,7 +88,7 @@ class _AnnouncementState extends State<Announcement> {
                     widget.announcement.date ?? DateTime.now(),
                   ),
                   style: MyTextStyle(
-                    color: const Color.fromARGB(255, 80, 149, 126),
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 Spacer(),
@@ -110,9 +110,9 @@ class _AnnouncementState extends State<Announcement> {
                     maxLength: 15,
                     controller: _titleController,
                     style: MyTextStyle(
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 24,
-                      fontWeight: .bold,
+                      fontWeight: FontWeight.bold,
                     ),
                     decoration: const InputDecoration(
                       counterText: '',
@@ -135,7 +135,7 @@ class _AnnouncementState extends State<Announcement> {
                 ? TextField(
                     controller: _bodyController,
                     style: MyTextStyle(
-                      color: Color.fromARGB(255, 82, 102, 93),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontSize: 16,
                     ),
                     decoration: const InputDecoration(
@@ -153,7 +153,7 @@ class _AnnouncementState extends State<Announcement> {
                     widget.announcement.content,
                     style: MyTextStyle(
                       fontSize: 16,
-                      color: Color.fromARGB(255, 82, 102, 93),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     maxLines: 3,
                   ),
@@ -168,12 +168,7 @@ class _AnnouncementState extends State<Announcement> {
                 child: Builder(
                   builder: (context) {
                     final double iconSize = 25.0;
-                    final Color themeColor = const Color.fromARGB(
-                      255,
-                      40,
-                      127,
-                      111,
-                    );
+                    final Color themeColor = Theme.of(context).colorScheme.primary;
 
                     // 1. Check for Google Drive
                     if (widget.announcement.redirectLink.contains('drive')) {
@@ -301,7 +296,7 @@ class _AnnouncementState extends State<Announcement> {
                       SizedBox(width: 8),
                       Icon(
                         Icons.link,
-                        color: Color.fromARGB(255, 40, 127, 111),
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ],
                   ],

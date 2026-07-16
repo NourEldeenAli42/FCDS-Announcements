@@ -1,5 +1,6 @@
 import 'package:fcds_announcements/HomeFeature/Models/priority_deadline_data_model.dart';
 import 'package:fcds_announcements/utils/Widgets/text_style.dart';
+import 'package:fcds_announcements/utils/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -15,6 +16,7 @@ class PriorityDeadlineCard extends StatefulWidget {
 
   PriorityDeadlineCard({super.key, required this.priorityDeadline});
 
+  PriorityDeadlineCard.empty({super.key, this.priorityDeadline = const PriorityDeadlineDataModel(remainingTime: '', title: '')});
   PriorityDeadlineCard.editing({super.key, required this.onSubmit})
     : priorityDeadline = PriorityDeadlineDataModel(
         title: '',
@@ -50,11 +52,11 @@ class _PriorityDeadlineCardState extends State<PriorityDeadlineCard> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -71,9 +73,7 @@ class _PriorityDeadlineCardState extends State<PriorityDeadlineCard> {
               bottom: 0,
               child: Container(
                 width: 8, // Adjust thickness
-                color: const Color(
-                  0xFFD38670,
-                ), // The coral/red color from your image
+                color: AppColors.priorityHigh, // The coral/red color from your image
               ),
             ),
 
@@ -84,7 +84,7 @@ class _PriorityDeadlineCardState extends State<PriorityDeadlineCard> {
               child: Icon(
                 Icons.warning_amber_rounded,
                 size: 100,
-                color: const Color(0xFFD38670).withValues(alpha: 0.1),
+                color: AppColors.priorityHigh.withValues(alpha: 0.1),
               ),
             ),
 
@@ -100,7 +100,7 @@ class _PriorityDeadlineCardState extends State<PriorityDeadlineCard> {
                       const Text(
                         "PRIORITY DEADLINE",
                         style: TextStyle(
-                          color: Color(0xFF5D7E6D), // Muted green text
+                          color: AppColors.primarySeed, // Muted green text
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
                           letterSpacing: 1.2,
@@ -117,8 +117,8 @@ class _PriorityDeadlineCardState extends State<PriorityDeadlineCard> {
                           child: Icon(
                             Icons.campaign,
                             color: _notificationEnabled
-                                ? Color(0xFFD38670)
-                                : Colors.grey,
+                                ? AppColors.priorityHigh
+                                : Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                     ],
@@ -130,7 +130,7 @@ class _PriorityDeadlineCardState extends State<PriorityDeadlineCard> {
                           style: MyTextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w900,
-                            color: const Color(0xFF1E1E1E),
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                           decoration: InputDecoration(
                             hintText: 'Enter Title',
@@ -148,10 +148,10 @@ class _PriorityDeadlineCardState extends State<PriorityDeadlineCard> {
                         )
                       : Text(
                           widget.priorityDeadline.title,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w900,
-                            color: Color(0xFF1E1E1E),
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                   InkWell(
@@ -194,7 +194,7 @@ class _PriorityDeadlineCardState extends State<PriorityDeadlineCard> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFDF2F0), // Very light red/pink
+                        color: AppColors.priorityHigh.withValues(alpha: 0.1), // Very light red/pink
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
@@ -204,8 +204,8 @@ class _PriorityDeadlineCardState extends State<PriorityDeadlineCard> {
                             Icons.timer_outlined,
                             size: 16,
                             color: _selectedDeadline != null
-                                ? Color(0xFFD38670)
-                                : Colors.grey,
+                                ? AppColors.priorityHigh
+                                : Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                           const SizedBox(width: 6),
                           Text(
@@ -213,7 +213,7 @@ class _PriorityDeadlineCardState extends State<PriorityDeadlineCard> {
                                 ? 'Tap to Select Deadline'
                                 : widget.priorityDeadline.remainingTime,
                             style: MyTextStyle(
-                              color: Color(0xFFD38670),
+                              color: AppColors.priorityHigh,
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
                             ),
@@ -226,7 +226,7 @@ class _PriorityDeadlineCardState extends State<PriorityDeadlineCard> {
                     const SizedBox(height: 12),
                     FilledButton(
                       style: FilledButton.styleFrom(
-                        backgroundColor: Color(0xFFD38670),
+                        backgroundColor: AppColors.priorityHigh,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -240,7 +240,7 @@ class _PriorityDeadlineCardState extends State<PriorityDeadlineCard> {
                           : null,
                       child: Text(
                         'Submit',
-                        style: MyTextStyle(color: Colors.white),
+                        style: MyTextStyle(color: Theme.of(context).colorScheme.onPrimary),
                       ),
                     ),
                   ],

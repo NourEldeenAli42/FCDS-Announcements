@@ -12,6 +12,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:fcds_announcements/utils/theme/theme_cubit.dart';
 
 class ProfileView extends StatelessWidget {
   ProfileView({super.key});
@@ -68,7 +69,7 @@ class ProfileView extends StatelessWidget {
             SizedBox(height: 12),
             FloatingActionButton(
               heroTag: 'profile_update_fab',
-              backgroundColor: Color.fromARGB(255, 54, 125, 101),
+              backgroundColor: Theme.of(context).colorScheme.primary,
               onPressed: () async {
                 final updater = ShorebirdUpdater();
                 final status = await updater.checkForUpdate();
@@ -135,7 +136,7 @@ class ProfileView extends StatelessWidget {
             icon: Icon(
               Icons.arrow_back_ios_new_rounded,
               size: 16,
-              color: Color.fromARGB(255, 54, 125, 101),
+              color: Theme.of(context).colorScheme.primary,
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -275,6 +276,8 @@ class ProfileView extends StatelessWidget {
                         },
                       ),
                       SizedBox(height: 24),
+                      _buildThemeSettings(context),
+                      SizedBox(height: 24),
                       FilledButton(
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all(Colors.red),
@@ -362,7 +365,7 @@ class ProfileView extends StatelessWidget {
                                   text: ' Nour "Eldeen" Ali',
                                   style: MyTextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 54, 125, 101),
+                                    color: Theme.of(context).colorScheme.primary,
                                   ),
                                 ),
                               ],
@@ -399,6 +402,178 @@ class ProfileView extends StatelessWidget {
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildThemeSettings(BuildContext context) {
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, state) {
+        return Card(
+          elevation: 2,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'App Theme Settings',
+                  style: MyTextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                
+                // Theme Mode Selector (Light, Dark, System)
+                Text(
+                  'Theme Mode',
+                  style: MyTextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildModeOption(context, ThemeMode.light, Icons.light_mode, 'Light', state.themeMode),
+                    _buildModeOption(context, ThemeMode.dark, Icons.dark_mode, 'Dark', state.themeMode),
+                    _buildModeOption(context, ThemeMode.system, Icons.settings_brightness, 'System', state.themeMode),
+                  ],
+                ),
+                
+                const SizedBox(height: 20),
+                
+                // Theme Color Palette Selector
+                Text(
+                  'Color Palette',
+                  style: MyTextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildColorOption(context, AppThemeType.mint, const Color(0xFF367D65), 'Mint', state.themeType),
+                    _buildColorOption(context, AppThemeType.ocean, const Color(0xFF1565C0), 'Ocean', state.themeType),
+                    _buildColorOption(context, AppThemeType.sunset, const Color(0xFFD84315), 'Sunset', state.themeType),
+                    _buildColorOption(context, AppThemeType.lavender, const Color(0xFF673AB7), 'Lavender', state.themeType),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildModeOption(
+    BuildContext context,
+    ThemeMode mode,
+    IconData icon,
+    String label,
+    ThemeMode currentMode,
+  ) {
+    final isSelected = mode == currentMode;
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    
+    return InkWell(
+      onTap: () {
+        context.read<ThemeCubit>().changeThemeMode(mode);
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: 80,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? primaryColor.withAlpha(40) : Colors.transparent,
+          border: Border.all(
+            color: isSelected ? primaryColor : Colors.grey.withAlpha(80),
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? primaryColor : Theme.of(context).colorScheme.onSurface,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: MyTextStyle(
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                color: isSelected ? primaryColor : Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildColorOption(
+    BuildContext context,
+    AppThemeType type,
+    Color color,
+    String label,
+    AppThemeType currentType,
+  ) {
+    final isSelected = type == currentType;
+    
+    return InkWell(
+      onTap: () {
+        context.read<ThemeCubit>().changeThemeType(type);
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Column(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: isSelected 
+                    ? (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black) 
+                    : Colors.transparent,
+                width: 3,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: color.withAlpha(100),
+                  blurRadius: isSelected ? 8 : 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: isSelected
+                ? const Icon(
+                    Icons.check,
+                    color: Colors.white,
+                    size: 20,
+                  )
+                : null,
+          ),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            style: MyTextStyle(
+              fontSize: 12,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
       ),
     );
   }

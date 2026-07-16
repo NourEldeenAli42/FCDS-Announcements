@@ -28,14 +28,14 @@ class TotalAdminsCard extends StatelessWidget {
             'Current Admins',
             style: MyTextStyle(
               fontSize: 16,
-              color: Color.fromARGB(255, 54, 125, 101),
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
           Text(
             totalAdmins?.toString() ?? '...',
             style: MyTextStyle(
               fontSize: 20,
-              color: Color.fromARGB(255, 54, 125, 101),
+              color: Theme.of(context).colorScheme.primary,
               fontWeight: FontWeight.bold,
             ),
           ),
