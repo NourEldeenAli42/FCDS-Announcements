@@ -1,0 +1,2 @@
+- name: Setup Shorebird
+  uses: shorebirdtech/setup-shorebird@v1.0.1
