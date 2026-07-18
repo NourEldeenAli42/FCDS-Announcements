@@ -168,7 +168,9 @@ class _AnnouncementState extends State<Announcement> {
                 child: Builder(
                   builder: (context) {
                     final double iconSize = 25.0;
-                    final Color themeColor = Theme.of(context).colorScheme.primary;
+                    final Color themeColor = Theme.of(
+                      context,
+                    ).colorScheme.primary;
 
                     // 1. Check for Google Drive
                     if (widget.announcement.redirectLink.contains('drive')) {
@@ -231,8 +233,6 @@ class _AnnouncementState extends State<Announcement> {
                                       color: themeColor,
                                       size: iconSize,
                                     ),
-                                    SizedBox(width: 8),
-                                    Text('View Attachment'),
                                   ],
                                 );
                               },

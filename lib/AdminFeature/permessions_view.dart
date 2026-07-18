@@ -323,8 +323,8 @@ class _PermessionsViewState extends State<PermessionsView>
                                                                                     content:
                                                                                         state
                                                                                             is RemovePermissionSuccess
-                                                                                        ? Lottie.network(
-                                                                                            'https://assets10.lottiefiles.com/packages/lf20_jbrw3hcz.json',
+                                                                                        ? Lottie.asset(
+                                                                                            'assets/Checkmark.lottie',
                                                                                             width: 100,
                                                                                             height: 100,
                                                                                             controller: _animationController,
@@ -459,8 +459,8 @@ class _PermessionsViewState extends State<PermessionsView>
                                                                                         )
                                                                                       : state
                                                                                             is AddPermissionSuccess
-                                                                                      ? Lottie.network(
-                                                                                          'https://assets10.lottiefiles.com/packages/lf20_jbrw3hcz.json',
+                                                                                      ? Lottie.asset(
+                                                                                          'assets/Checkmark.lottie',
                                                                                           width: 100,
                                                                                           height: 100,
                                                                                           controller: _animationController,
