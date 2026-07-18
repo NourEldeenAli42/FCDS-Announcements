@@ -5,6 +5,7 @@ import 'package:fcds_announcements/AdminFeature/manage_courses_view.dart';
 import 'package:fcds_announcements/AdminFeature/manage_pages_view.dart';
 import 'package:fcds_announcements/AdminFeature/manage_users_view.dart';
 import 'package:fcds_announcements/AdminFeature/permessions_view.dart';
+import 'package:fcds_announcements/ChatFeature/chat_view.dart';
 import 'package:fcds_announcements/LoginFeature/login_view.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
 import 'package:fcds_announcements/OnBoardingFeature/host_screen.dart';
@@ -20,6 +21,7 @@ import 'package:fcds_announcements/utils/supabase.dart';
 import 'package:fcds_announcements/utils/theme/app_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -96,11 +98,13 @@ class MyApp extends StatelessWidget {
                 create: (context) => ManagePagesBloc()..add(LoadPagesEvent()),
                 child: ManagePagesView(),
               ),
+              '/ai_chat': (context) => const ChatView(),
             },
             title: 'FCDS Announcements',
             theme: AppTheme.getTheme(state.themeType, Brightness.light),
             darkTheme: AppTheme.getTheme(state.themeType, Brightness.dark),
             themeMode: state.themeMode,
+
             home: firstTimeUser ? const HostScreen() : const AuthWrapper(),
           );
         },
