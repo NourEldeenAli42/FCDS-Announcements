@@ -183,8 +183,8 @@ class _ManageUsersViewState extends State<ManageUsersView>
                                                             CircularProgressIndicator(),
                                                       )
                                                     : state is RequestSentState
-                                                    ? Lottie.network(
-                                                        'https://lottie.host/3dbd3955-70f5-4985-9f59-0c73a6326b7d/xYBzutmaWl.lottie',
+                                                    ? Lottie.asset(
+                                                        'assets/Checkmark.lottie',
                                                         width: 200,
                                                         height: 200,
                                                         controller:

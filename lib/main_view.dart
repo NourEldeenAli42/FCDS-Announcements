@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crystal_navigation_bar/crystal_navigation_bar.dart';
+import 'package:fcds_announcements/ChatFeature/chat_view.dart';
 import 'package:fcds_announcements/FollowPageFeature/search_courses.dart';
 import 'package:fcds_announcements/HomeFeature/home_view.dart';
 import 'package:fcds_announcements/QuickLinksFeature/quick_links_view.dart';
@@ -11,10 +10,8 @@ import 'package:fcds_announcements/SubjectsFeature/Widgets/add_reminder_form.dar
 import 'package:fcds_announcements/SubjectsFeature/subjects_view.dart';
 import 'package:fcds_announcements/SubjectsFeature/bloc/Subjects%20Bloc/subjects_bloc.dart';
 import 'package:fcds_announcements/generated/assets.dart';
-import 'package:fcds_announcements/utils/AI%20Model/core_model.dart';
 import 'package:fcds_announcements/utils/date_formatter.dart';
 import 'package:fcds_announcements/utils/Widgets/text_style.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -104,13 +101,10 @@ class _MainViewState extends State<MainView> {
           : _currentIndex == 0
           ? FloatingActionButton(
               onPressed: () async {
-                final result = await FilePicker.pickFiles(allowMultiple: false);
-                final file = File(result!.files.first.path!);
-                final text = await AIModel.generateText(
-                  'List Contents of this PDF',
-                  file.readAsBytesSync(),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ChatView()),
                 );
-                showAboutDialog(context: context, children: [Text(text)]);
               },
               child: Icon(Icons.add),
             )
